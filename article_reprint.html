@@ -1,0 +1,248 @@
+#include("./layout.html")
+#include("_sidebar.html")
+#@layout()
+
+#define script()
+<script src="/static/components/jquery/jquery.form.min.js"></script>
+<!--<script src="/static/commons/article.js"></script>-->
+<script src="js/plugin/jquery/jquery.qrcode.min.js"></script>
+<script src="/static/components/ckeditor/ckeditor.js"></script>
+<script src="js/article-custom.js"></script>
+<script src="js/plugin/zoomify/zoomify.min.js"></script>
+<script src="js/plugin/jquery/jquery.tocify/jquery-ui.min.js"></script>
+<script src="js/plugin/jquery/jquery.tocify/jquery.tocify.js"></script>
+<script src="/static/commons/jpresscommons.js"></script>
+#@sidebarResource()
+#end
+
+#define css()
+<link href="/static/commons/article.css" rel="stylesheet">
+<link href="css/plugin/zoomify/zoomify.min.css" rel="stylesheet">
+<link href="css/plugin/tocify/jquery.tocify.css" rel="stylesheet">
+#end
+
+#define content()
+<div class="col-md-8 col-lg-8 col-xl-9 #(option('calmlog_ex_sidebar_position') == 'left' ? 'offset-md-4 offset-lg-4 offset-xl-3 cl-right' : 'cl-left')">
+    #if(linesOption("calmlog_ex_notice")  && linesOption("calmlog_ex_notice").size() > 0 && linesOption("calmlog_ex_notice")[0].trim())
+    <div class="alert alert-light text-success">
+      <span><i class="fa fa-bullhorn fa-fw"></i><strong>通知</strong>&nbsp;#(linesOption("calmlog_ex_notice")[0].trim() ??)</span>
+    </div>
+    #end
+    
+    <div class="alert alert-light text-warning"><i class="fa fa-external-link fa-fw"></i> 文章来源于网络，无法注明出处的还请谅解，如果出处注明错误（如仍是载转），请联系我修改</div>
+    
+    #set(map={})
+    #categories()
+    #for(c: categories)
+        #set(map[c.id]=c)
+    #end
+    #end
+    #articleCategories(article.getId(), 'category')
+    <nav class="breadcrumb">
+        #for(category: categories)
+            #if(for.count == 1)
+              #set(cs=[0,0,0,0,0,0])
+              #set(cs[0]=article)
+              #set(cs[1]=category)
+              #set(layer=1)
+              
+              #if(cs[1].parentId != 0)
+                #set(cs[2]=map[cs[1].parentId])
+                #set(layer=2)
+                #if(cs[2].parentId != 0)
+                    #set(cs[3]=map[cs[2].parentId])
+                    #set(layer=3)
+                    #if(cs[3].parentId != 0)
+                        #set(cs[4]=map[cs[3].parentId])
+                        #set(layer=4)
+                        #if(cs[4].parentId != 0)
+                            #set(cs[5]=map[cs[4].parentId])
+                            #set(layer=5)
+                        #end
+                    #end
+                #end
+              #end
+              
+             <span><i class="fa fa-bars fa-fw"></i>
+                #for(i=layer; i>=0; i--)
+                #if(i == 1)
+                <a class="breadcrumb-item" href="#(cs[i].url)">#(cs[i].title) <i class="fa fa-hand-o-left link-color"></i></a>
+                #else
+                <span class="breadcrumb-item active">#(cs[i].title)</span>
+                #end
+                #end
+              </span>
+            #end
+        #end
+    </nav>
+    #end
+
+    <div class="cl-artical-content pt-4 bg-light">
+        
+    
+        <h2 class="cl-artical-title pt-0">#(article.title)</h2>
+        <div class="cl-card-tag">
+            <div><span><i class="fa fa-eye fa-fw"></i>#(article.view_count ?? 0)</span>人浏览 / <span><i class="fa fa-comment fa-fw"></i>#(article.comment_count ?? 0)</span>人评论
+            <span> | 这是对我有帮助的文章<i class="fa fa-smile-o"></i> </span>
+            #articleCategories(article.getId(), 'category')
+                &nbsp;|&nbsp;<i class="fa fa-bookmark fa-fw"></i>分类：
+                #for(category: categories)
+                #(category.getParent())
+                    <a href="#(category.url ??)">#(category.title ??)</a>
+                #end
+            #end
+            #articleCategories(article.getId(), 'tag')
+                &nbsp;|&nbsp;<i class="fa fa-tags fa-fw"></i>标签：
+                #for(category: categories)
+                    <a href="#(category.url ??)">#(category.title ??)</a>
+                    #if(for.size != for.count)
+                        &nbsp;/&nbsp;
+                    #end
+                #end
+            #end
+            </div>
+        </div>
+        <div class="cl-artical">
+            #(article.flag == 'hidden' ? '该文章已隐藏，你无权查看！' : article.content)
+        </div>
+        #if(linesOption("calmlog_ex_endnote") && linesOption("calmlog_ex_endnote").size() > 0 && linesOption("calmlog_ex_endnote")[0].trim())
+        <div class="pl-4 noSel py-3" id="endnote">
+            <div class="shadow-blink">#(linesOption("calmlog_ex_endnote")[0].trim() ??)</div>
+        </div>
+        #end
+        <input type="hidden" id="articleId" value="#(article.id)" >
+    </div>
+    
+    <div class="text-center" style="background-color:rgba(0,0,0,0);font-size:0;padding: 20px;margin-top: 20px;">
+        <span class="" style="display:inline-block;position:relative">
+            <span class="bg-info thumbs_button fa fa-thumbs-up" style="font-weight: bold;font-size: 16px;line-height:45px;cursor:pointer;user-select:none" 
+            title="点赞，支持一下" id="thumbUp"> 点赞(<span id="thumbUpNum">0</span>)</span><!--
+            --><span class="bg-danger reward_button fa fa-money" style="font-weight: bold;font-size: 16px;line-height:45px;cursor:pointer;user-select:none" 
+                #if(!option('calmlog_ex_donate_wechat') && !option('calmlog_ex_donate_alipay')) title="作者还没准备好要打赏" #else title="扫描二维码，支持一下" #end> 打赏</span>
+            #if(option('calmlog_ex_donate_wechat') || option('calmlog_ex_donate_alipay'))
+            <div id="donate-money" style="position:absolute;top:-175px;display:none;width:290px">
+                #if(option('calmlog_ex_donate_wechat') && option('calmlog_ex_donate_alipay'))
+                <div style='width:145px;display:inline-block;background-color:#fff'>
+                    <img src="#option('calmlog_ex_donate_wechat')" style="display:inline-block;width:145px;height:145px;"/><br>
+                    <span style='width:145px;display:inline-block;font-size: 16px;;color:#1AAD19' class='p-1'>微信扫一扫</span>
+                </div><!--
+                --><div style='width:145px;display:inline-block;background-color:#fff'>
+                    <img src="#option('calmlog_ex_donate_alipay')" style="display:inline-block;width:145px;height:145px;"/><br>
+                    <span style='width:145px;display:inline-block;font-size: 16px;color:#1677FF' class='p-1'>支付宝扫一扫</span>
+                </div>
+                #else if(option('calmlog_ex_donate_wechat'))
+                 <div style='width:145px;display:inline-block;background-color:#fff'>
+                    <img src="#option('calmlog_ex_donate_wechat')" style="display:inline-block;width:145px;height:145px;"/><br>
+                    <span style='width:145px;display:inline-block;font-size: 16px;;color:#1AAD19' class='p-1'>微信扫一扫</span>
+                </div>
+                #else
+                <div style='width:145px;display:inline-block;background-color:#fff'>
+                    <img src="#option('calmlog_ex_donate_alipay')" style="display:inline-block;width:145px;height:145px;"/><br>
+                    <span style='width:145px;display:inline-block;font-size: 16px;color:#1677FF' class='p-1'>支付宝扫一扫</span>
+                </div>
+                #end
+            </div>
+            #end
+        </span>
+    </div>
+
+
+    #relevantArticles(article, count=3, hiddenFlag=true)
+    <div class="recommend-panel bg-light">
+        <h4 class="right-card-title">相关文章</h4>
+        <div class="card-deck">
+
+            #for(article :relevantArticles )
+            <div class="card ll-panel">
+                <a class="recommend-panel-link" href="#(article.url ??)" target="#(option('calmlog_ex_link_to_blank') && article.linkTo ? '_blank' : '_self')">
+                    <div class="recommend-panel-top">
+                        <img src="#(article.thumbnail ? article.thumbnail : (article.showImage ? article.showImage : 'img/default-img.png'))" class="img-fluid"
+                             alt="#(article.title ??)">
+                    </div>
+                    <div class="recommend-panel-bottom">
+                        #(article.title ??)
+                    </div>
+                </a>
+            </div>
+            #end
+
+        </div>
+    </div>
+    #end
+    
+    
+    #userArticles(userId=article.userId, count=3, orderBy="RAND()", hiddenFlag=true)
+    #if(!(articles.size() == 1 && articles[0].id == article.id))
+    <div class="recommend-panel bg-light">
+        <h4 class="right-card-title">作者其它文章</h4>
+        <div class="card-deck">
+            #set(count=0)
+            #for(userArticle :articles )
+            #if(article.id != userArticle.id && count < 3)
+            #set(count=count+1)
+            <div class="card ll-panel">
+                <a class="recommend-panel-link" href="#(userArticle.url ??)" target="#(option('calmlog_ex_link_to_blank') && article.linkTo ? '_blank' : '_self')">
+                    <div class="recommend-panel-top">
+                        <img src="#(userArticle.thumbnail ? userArticle.thumbnail : (userArticle.showImage ? userArticle.showImage : 'img/default-img.png'))" class="img-fluid"
+                             alt="#(userArticle.title ??)">
+                    </div>
+                    <div class="recommend-panel-bottom">
+                        #(userArticle.title ??)
+                    </div>
+                </a>
+            </div>
+            #end
+            #end
+
+        </div>
+    </div>
+    #end
+    #end
+
+    #include("./fragment/articleCommentPage.html")
+    
+    #if(option("calmlog_ex_content_ad" ??))
+    <div class="content-ad bg-light" id="content-ad">
+        <div class="content-ad-title">广告位-动动手帮助网站活下去</div>
+        <div class="content-ad-main pb-3">
+            <div id="content-tail-ad" class="m-1 ad-content">
+                #option("calmlog_ex_content_ad" ??)
+            </div>
+        </div>
+    </div>
+    #end
+
+</div>
+
+<div class="col-md-4 col-lg-4 col-xl-3 #(option('calmlog_ex_sidebar_position') == 'left' ? 'offset-mdn-8 offset-lgn-8 offset-xln-9 offset-smn-0 cl-left' : 'cl-right')">
+    #@sidebarContent()
+</div>
+<div id="articleAppendix">
+    <div id="share">
+        <a class="" title="分享" data-toggle="tooltip"><img alt="" id="articleShareImg" src="img/icon/share.png" /></a>
+        <div id="shareDiv" class="hidden px-2 py-1" tabindex="9999">
+            <div class="pb-1">
+                <a target="_blank" href="http://shuo.douban.com/!service/share?href=#(C.request.scheme)://#(C.request.serverName)/#(java.net.URLEncoder::encode(article.url, 'utf-8'))&name=#(article.title)&text=#maxLength(article.text,120)&starid=0&aid=0&style=11"><img alt="duoban" src="img/icon/douban.png" /></a>
+                <a target="_blank" href="https://service.weibo.com/share/share.php?url=#(C.request.scheme)://#(C.request.serverName)/#(java.net.URLEncoder::encode(article.url, 'utf-8'))&title=#(article.title)"><img alt="weibo" src="img/icon/weibo.png" /></a>
+                <a target="_blank" href="http://www.linkedin.com/shareArticle?url=#(C.request.scheme)://#(C.request.serverName)/#(java.net.URLEncoder::encode(article.url, 'utf-8'))&title=#(article.title)&summary=#maxLength(article.text,120)&mini=true&ro=true&armin=armin"><img alt="linkin" src="img/icon/linkedin.png" /></a>
+                <a target="_blank" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=#(C.request.scheme)://#(C.request.serverName)/#(java.net.URLEncoder::encode(article.url, 'utf-8'))&title=#(article.title)&summary=#maxLength(article.text,120)"><img alt="qzone" src="img/icon/tencent_qzone.png" /></a>
+            </div>
+            <div>
+                <div id="wechatShareQr"></div>
+                <div class="text-center">扫码分享到微信</div>
+            </div>
+            
+        </div>
+    </div>
+    <div id="articlePrePost">
+        <a id="articlePost" #nextArticle(hiddenFlag=true) href="#(next.url)" title="#(next.title)" class="pointer" #end class="not-allowed" title="没有了" data-toggle="tooltip"><img alt="" src="img/icon/right_arrow2.png" /></a>
+        <a id="articlePre" #previousArticle(hiddenFlag=true) href="#(previous.url)" title="#(previous.title)" class="pointer" #end class="not-allowed" title="没有了" data-toggle="tooltip"><img src="img/icon/left_arrow2.png" /></a>
+    </div>
+    <div id="catalog">
+        <a id="catalog-icon" title="文章目录" data-toggle="tooltip"><img alt="" src="img/icon/catalog.png" /></a>
+        <div id="catalog-wrapper" class="catalog-hide">
+            <div id="toc" class="bg-light"></div>
+        </div>
+    </div>
+</div>
+#end

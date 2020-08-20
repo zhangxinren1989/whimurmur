@@ -1,0 +1,45 @@
+.shadow-blink{
+   animation: shadow 5s linear infinite;
+}
+
+.bgc-blink{
+    display: inline-block;
+    border-radius: 5px;
+    padding: 5px;
+    animation:bgc-blink 24s linear forwards infinite;
+}
+.menu-one{
+    font-size: 2rem;
+    margin: 5px 0 5px 0;
+}
+.menu-two{
+    font-size: 1.75rem;
+    margin: 5px 0 5px 0;
+}
+.menu-three{
+    font-size: 1.5rem;
+    margin: 5px 0 5px 0;
+}
+.menu-four{
+    font-size: 1.25rem;
+    margin: 5px 0 5px 0;
+}
+.menu-link{
+    color: #4cc134;
+}
+.menu-link:hover {
+    color: #FF9400;
+    text-decoration: underline;
+}
+.fitc{
+    width:fit-content;
+}
+.bgo-3{
+    background:rgba(248,249,250,0.5);
+}
+.fb{
+    font-weight: bold;
+}
+.h-1{
+    font-size: 2.5rem;
+}

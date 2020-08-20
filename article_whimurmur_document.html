@@ -1,0 +1,122 @@
+#include("./layout.html")
+#@layout()
+
+#define script()
+<script src="/static/components/jquery/jquery.form.min.js"></script>
+<script src="/static/commons/article.js"></script>
+<script src="js/plugin/jquery/jquery.qrcode.min.js"></script>
+<script src="js/plugin/zoomify/zoomify.min.js"></script>
+<script src="bootstrap/js/bootstrap-treeview.min.js"></script>
+<script src="plugin-whimurmurDocument/article-document-custom.js"></script>
+#end
+
+#define css()
+<link href="css/plugin/zoomify/zoomify.min.css" rel="stylesheet">
+<link href="/static/commons/article.css" rel="stylesheet">
+<link href="plugin-whimurmurDocument/article-document.css" rel="stylesheet">
+<link href="bootstrap/css/bootstrap-treeview.min.css" rel="stylesheet">
+#end
+
+#define content()
+<div class="col-md-3 col-lg-3 col-xl-3 cl-left" id="help-document">
+</div>
+
+<div class="col-md-9 col-lg-9 col-xl-9 offset-md-3 offset-lg-3 offset-xl-3 cl-right">
+    <div class="cl-artical-content pt-4 bg-light">
+        #set(map={})
+        #categories()
+        #for(c: categories)
+            #set(map[c.id]=c)
+        #end
+        #end
+        #articleCategories(article.getId(), 'category')
+        <nav class="breadcrumb">
+            #for(category: categories)
+                #if(for.count == 1)
+                  #set(cs=[0,0,0,0,0])
+                  #set(cs[0]=article)
+                  #set(cs[1]=category)
+                  #set(layer=1)
+                  
+                  #if(cs[1].parentId != 0)
+                    #set(cs[2]=map[cs[1].parentId])
+                    #set(layer=2)
+                    #if(cs[2].parentId != 0)
+                        #set(cs[3]=map[cs[2].parentId])
+                        #set(layer=3)
+                        #if(cs[3].parentId != 0)
+                            #set(cs[4]=map[cs[4].parentId])
+                            #set(layer=4)
+                        #end
+                    #end
+                  #end
+                  
+                 <span><i class="fa fa-bars fa-fw"></i>
+                    #for(i=layer; i>=0; i--)
+                    #if(i == 1)
+                    <a class="breadcrumb-item" href="#(cs[i].url)">#(cs[i].title) <i class="fa fa-hand-o-left link-color"></i></a>
+                    #else
+                    <span class="breadcrumb-item active">#(cs[i].title)</span>
+                    #end
+                    #end
+                  </span>
+                #end
+            #end
+        </nav>
+        #end
+    
+        <h2 class="cl-artical-title pt-0">#(article.title)</h2>
+        <div class="cl-card-tag">
+            <div><span><i class="fa fa-eye fa-fw"></i>#(article.view_count ?? 0)</span>人浏览
+            <span> | <i class="fa fa-user fa-fw"></i>作者：#(article.user.nickname ??) </span>
+            #articleCategories(article.getId(), 'category')
+                &nbsp;|&nbsp;<i class="fa fa-bookmark fa-fw"></i>分类：
+                #for(category: categories)
+                #(category.getParent())
+                    <a href="#(category.url ??)">#(category.title ??)</a>
+                #end
+            #end
+            
+            #articleCategories(article.getId(), 'tag')
+                &nbsp;|&nbsp;<i class="fa fa-tags fa-fw"></i>标签：
+                #for(category: categories)
+                    <a href="#(category.url ??)">#(category.title ??)</a>
+                    #if(for.size != for.count)
+                        &nbsp;/&nbsp;
+                    #end
+                #end
+            #end
+            </div>
+        </div>
+        <div class="cl-artical">
+            #(article.content)
+        </div>
+        #if(linesOption("calmlog_ex_endnote") && linesOption("calmlog_ex_endnote").size() > 0 && linesOption("calmlog_ex_endnote")[0].trim())
+        <div class="pl-4 noSel py-3" id="endnote">
+            <div class="shadow-blink">#(linesOption("calmlog_ex_endnote")[0].trim() ??)</div>
+        </div>
+        #end
+    </div>
+
+
+</div>
+
+<div id="articleAppendix">
+    <div id="share">
+        <a class="" title="分享" data-toggle="tooltip"><img alt="" id="articleShareImg" src="img/icon/share.png" /></a>
+        <div id="shareDiv" class="hidden px-2 py-1" tabindex="9999">
+            <div class="pb-1">
+                <a target="_blank" href="http://shuo.douban.com/!service/share?href=#(C.request.scheme)://#(C.request.serverName)/#(java.net.URLEncoder::encode(article.url, 'utf-8'))&name=#(article.title)&text=#maxLength(article.text,120)&starid=0&aid=0&style=11"><img alt="duoban" src="img/icon/douban.png" /></a>
+                <a target="_blank" href="https://service.weibo.com/share/share.php?url=#(C.request.scheme)://#(C.request.serverName)/#(java.net.URLEncoder::encode(article.url, 'utf-8'))&title=#(article.title)"><img alt="weibo" src="img/icon/weibo.png" /></a>
+                <a target="_blank" href="http://www.linkedin.com/shareArticle?url=#(C.request.scheme)://#(C.request.serverName)/#(java.net.URLEncoder::encode(article.url, 'utf-8'))&title=#(article.title)&summary=#maxLength(article.text,120)&mini=true&ro=true&armin=armin"><img alt="linkin" src="img/icon/linkedin.png" /></a>
+                <a target="_blank" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=#(C.request.scheme)://#(C.request.serverName)/#(java.net.URLEncoder::encode(article.url, 'utf-8'))&title=#(article.title)&summary=#maxLength(article.text,120)"><img alt="qzone" src="img/icon/tencent_qzone.png" /></a>
+            </div>
+            <div>
+                <div id="wechatShareQr"></div>
+                <div class="text-center">扫码分享到微信</div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+#end

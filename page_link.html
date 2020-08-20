@@ -1,0 +1,47 @@
+#include("./layout.html")
+#include("_sidebar.html")
+
+#define css()
+<link href="/static/commons/article.css" rel="stylesheet">
+<link rel="stylesheet" href="./plugin-pageLink/link.css" />
+#end
+
+#define script()
+<script src="/static/components/jquery/jquery.form.min.js"></script>
+<script src="/static/components/ckeditor/ckeditor.js"></script>
+<script src="./plugin-pageLink/link.js"></script>
+#@sidebarResource()
+#end
+
+#@layout()
+#define content()
+<div class="p-content-box col-md-8 col-lg-8 col-xl-9 #(option('calmlog_ex_sidebar_position') == 'left' ? 'offset-md-4 offset-lg-4 offset-xl-3 cl-right' : 'cl-left')">
+    <div class="p-content-box-lwlhitokoto">
+        <h3>友情链接</h3>
+    </div>
+    <div class="p-link-list-box layui-clear">
+        #perfreeLinks()
+        #for(link : links)
+        <a class="p-link-box layui-clear" href="#(link.link)" target="_blank" >
+            <div class="p-link-msg clearfix">
+                <h2 class="p-link-title text-primary">#(link.name)<span class="p-link-title-sub text-secondary">&nbsp;&nbsp;#(link.link)</span></h2>
+                <div class="p-link-desc text-success">#(link.desc)</div>
+            </div>
+            #if(link.imgUrl != null && link.imgUrl.length() > 0)<div style="background-image:url(#(link.imgUrl));background-size: auto 100%;height:50px"></div>#end
+        </a>
+        #end
+        #end
+    </div>
+    #if(page.content != null)
+    <div class="p-article-content-box link-msg">
+        #(page.content)
+    </div>
+    #end
+
+    #include("./fragment/pageCommentPage.html")
+</div>
+
+<div class="col-md-4 col-lg-4 col-xl-3 #(option('calmlog_ex_sidebar_position') == 'left' ? 'offset-mdn-8 offset-lgn-8 offset-xln-9 offset-smn-0 cl-left' : 'cl-right')">
+    #@sidebarContent()
+</div>
+#end

@@ -1,0 +1,159 @@
+#include("./layout.html")
+#include("_sidebar.html")
+#@layout()
+
+#define script()
+<script src="/static/components/jquery/jquery.form.min.js"></script>
+<script src="/static/commons/page.js"></script>
+<script src="plugin-trace/js/jquery.eeyellow.Timeline.js"></script>
+#@sidebarResource()
+#end
+
+#define css()
+<link href="/static/commons/page.css" rel="stylesheet">
+<link href="plugin-trace/css/jquery.eeyellow.Timeline.css" rel="stylesheet">
+<style>
+.comment-form > div > textarea{
+    height: auto;
+}
+</style>
+#end
+
+#define content()
+<div class="col-md-9 cl-left">
+
+    <div class="cl-artical-content bgo-3">
+        <h2 class="cl-artical-title">#(page.title)</h2>
+        <div class="cl-card-tag">
+            <div><span>#(page.view_count)</span>人浏览</div>
+        </div>
+        <div class="cl-artical">
+            #(page.content)
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+            
+                        <div class="VivaTimeline">
+                            <dl>
+                                <dt>May 2016</dt>
+                                <dd class="pos-left clearfix">
+                                    <div class="circ"></div>
+                                    <div class="time">Feb 03</div>
+                                    <div class="events">
+                                        <div class="events-header">美好的一天</div>
+                                        <div class="events-body">
+                                            <div class="row">
+                                                <div class="col-md-6 pull-left">
+                                                    <img class="events-object img-fluid rounded" src="plugin-trace/image/dog01.jpeg" />
+                                                </div>
+                                                <div class="events-desc">
+                                                    又是新的一天，加油
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 pull-left">
+                                                    <img class="events-object img-fluid rounded" src="plugin-trace/image/dog02.jpeg" />
+                                                </div>
+                                                <div class="events-desc">
+                                                    每天做不同的事情，有不一样的心情
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 pull-left">
+                                                    <img class="events-object img-fluid rounded" src="plugin-trace/image/dog03.jpeg" />
+                                                </div>
+                                                <div class="events-desc">
+                                                   即使不休息，也不觉得累
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="events-footer">
+                                            123
+                                        </div>
+                                    </div>
+                                </dd>
+                                <dt>Feb 2016</dt>
+                                <dd class="pos-right clearfix">
+                                    <div class="circ"></div>
+                                    <div class="time">Jan 21</div>
+                                    <div class="events">
+                                        <div class="events-header">新工作</div>
+                                        <div class="events-body">
+                                            <div class="row">
+                                                <div class="col-md-6 pull-left">
+                                                    <img class="events-object img-fluid rounded" src="plugin-trace/image/cat01.jpeg" />
+                                                </div>
+                                                <div class="events-desc">
+                                                    开始新工作
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 pull-left">
+                                                    <img class="events-object img-fluid rounded" src="plugin-trace/image/cat02.jpeg" />
+                                                </div>
+                                                <div class="events-desc">
+                                                    迎接新生活
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 pull-left">
+                                                    <img class="events-object img-fluid rounded" src="plugin-trace/image/cat03.jpeg" />
+                                                </div>
+                                                <div class="events-desc">
+                                                    重启新人生
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="events-footer">
+            
+                                        </div>
+                                    </div>
+                                </dd>
+                                <dd class="pos-left clearfix">
+                                    <div class="circ"></div>
+                                    <div class="time">Jan 07</div>
+                                    <div class="events">
+                                        <div class="events-header">毕业了</div>
+                                        <div class="events-body">
+                                            <div class="row">
+                                                <div class="col-md-6 pull-left">
+                                                    <img class="events-object img-fluid rounded" src="plugin-trace/image/rabbit01.jpeg" />
+                                                </div>
+                                                <div class="events-desc">
+                                                    回首，舍不得，前行，在路上
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </dd>
+                                <dt>Jan 2016</dt>
+                                <dt>Dec 2015</dt>
+                                <dt>Oct 2015</dt>
+                                <dt>Sep 2015</dt>
+                                <dt>Aug 2015</dt>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+   <!-- #@defaultPageCommentPage()-->
+
+</div>
+
+<div class="col-md-3 cl-right">
+    #@sidebarContent()
+
+</div>
+#end
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.VivaTimeline').vivaTimeline({
+            carousel: true,
+            carouselTime: 3000
+        });
+    });
+</script>

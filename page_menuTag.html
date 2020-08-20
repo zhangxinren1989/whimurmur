@@ -1,0 +1,167 @@
+#include("./layout.html")
+#@layout()
+
+#define css()
+<link rel="stylesheet" href="./plugin-menuTag/plugin-menuTag.css" />
+#end
+
+<script>
+    var curTheme = $.cookie()['curTheme'];
+    var color = themeMainColor[curTheme];
+
+     var shadowBlink = "@keyframes shadow {0%{ text-shadow: 0 0 4px color}\
+    50%{ text-shadow: 0 0 40px color}\
+    100%{ text-shadow: 0 0 4px color}}";
+    shadowBlink = shadowBlink.replace(/color/gm, color);
+    
+    var bgcBlink = "@keyframes bgc-blink {\
+	0% {\
+		background-color: {0};\
+	}\
+	9% {\
+		background-color: {1};\
+	}\
+	18% {\
+		background-color: {2};\
+	}\
+	27% {\
+		background-color: {3};\
+	}\
+	36% {\
+		background-color: {4};\
+	}\
+	45% {\
+		background-color: {5};\
+	}\
+	54% {\
+		background-color: {6};\
+	}\
+	63% {\
+		background-color: {7};\
+	}\
+	72% {\
+		background-color: {8};\
+	}\
+	81% {\
+		background-color: {9};\
+	}\
+	90% {\
+		background-color:{10};\
+	}\
+	99% {\
+		background-color: {11};\
+	}\
+}";
+    
+    var themeColors = [];
+    for(var key in themeMainColor){
+        themeColors.push(themeMainColor[key]);
+    }
+    bgcBlink = bgcBlink.replace(/{(\d+?)}/gm, function(s, m){
+         return themeColors[m];
+    });
+    
+    var borderL = ".bl{\
+        border-left: 3px solid color;\
+    }";
+    borderL = borderL.replace(/color/gm, color);
+    
+    var styleSheets = document.styleSheets[0];
+	styleSheets.insertRule(shadowBlink, styleSheets.length);//写入样式
+	styleSheets.insertRule(bgcBlink, styleSheets.length);//写入样式
+	styleSheets.insertRule(borderL, styleSheets.length);//写入样式
+</script>
+
+#define content()
+<div class="container p-3 mt-3 bgo-3 fb">
+    <div class="row">
+        <div class="col-md-12">
+        	<div class="ml-5">
+                <div class="h-1">#(page.title)</div>
+                <div><i class="fa fa-eye fa-fw"></i><span class="text-primary">#(page.view_count)</span>人浏览</div>
+            </div>
+            
+            <div class="m-auto fitc">
+                <div class="fitc h-1">
+                    菜单
+                </div>
+                #for(menu : MENUS)
+        	    #if(menu.isTop())
+                   <div class="fitc">
+        			   <span>#if(!menu.hasChild())<a class="menu-one menu-link text-primary" href="#(CPATH)#(menu.url)">#(menu.text)</a>  #else <span class="shadow-blink menu-one">#(menu.text)</span> #end</span>
+        					#if(menu.hasChild())
+        					<div class="bl" style="padding-left: 15px">
+            					#for(child: menu.childs)
+            					<div class="p-2 fitc">
+            						 <span class="p-2">#if(!child.hasChild())<a class="menu-lin text-primary" href="#(CPATH)#(child.url)">#(child.text)</a> #else <span class="shadow-blink menu-two">#(child.text)</span> #end</span>
+            						     #if(child.hasChild())
+            						     <div class="bl" style="padding-left: 15px">
+                						     #for(child2: child.childs)
+                						     <div class="p-2">
+                						         <span class="p-2">#if(!child2.hasChild())<a class="menu-link text-primary" href="#(CPATH)#(child2.url)">#(child2.text)</a> #else <span class="shadow-blink menu-three">#(child2.text)</span> #end</span>
+                								      #if(child2.hasChild())
+                								      <div class="bl" style="padding-left: 15px">
+                    								      #for(child3: child2.childs)
+                    								      <div class="p-2">
+                    						                   <span class="p-2">#if(!child3.hasChild())<a class="menu-link text-primary" href="#(CPATH)#(child3.url)">#(child3.text)</a> #else <span class="shadow-blink menu-four">#(child3.text)</span> #end</span>
+                    						                   #if(child3.hasChild())
+                    						                   <div class="bl" style="padding-left: 15px">
+                        						                   #for(child4: child3.childs)
+                	        								       <div class="p-2">
+                	        						                   <span class="p-2"><a class="menu-link text-primary" href="#(CPATH)#(child4.url)">#(child4.text)</a></span>
+                	        					                   </div>
+                	        					                   #end
+            	        					                  </div>
+            	        					                  #end
+                    					                  </div>
+                    					                  #end
+                					                  </div>
+                					                  #end
+                                             </div>
+                					         #end
+            					         </div>
+            					         #end
+            					</div>
+            					#end
+            				</div>
+            				#end
+                    </div>
+        	    #end
+        	    #end
+        	    
+        	    #tags(count = 9999)
+        	    <div class="fitc mt-4 h-1">
+                    文章标签
+                </div>
+               <div class="fitc">
+            	    <table cellpadding="5" class="fb">
+            	    #for(tag: tags)
+            	    #if(for.index % 3 == 0)<tr>#end
+            	        <td><span><a class=" menu-link text-primary" href="#(CPATH)#(tag.url)">#(tag.title)</a> | <span class="bgc-blink">共#(tag.count)篇文章</span></span></td>
+            	    #if(for.index % 3 == 2)</tr>#end
+            	    #if(for.count == for.size && for.index % 3 != 2) </tr> #end
+            	    #end
+            	    </table>
+        	    </div>
+        	    #end
+        	    
+        	    #productTags(count = 9999)
+        	    <div class="fitc mt-4 h-1">
+                    产品标签
+                </div>
+               <div class="fitc">
+            	    <table cellpadding="5" class="fb">
+            	    #for(tag: tags)
+            	    #if(for.index % 3 == 0)<tr>#end
+            	        <td><span><a class=" menu-link text-primary" href="#(CPATH)#(tag.url)">#(tag.title)</a> | <span class="bgc-blink">共#(tag.count)篇文章</span></span></td>
+            	    #if(for.index % 3 == 2)</tr>#end
+            	    #if(for.count == for.size && for.index % 3 != 2) </tr> #end
+            	    #end
+            	    </table>
+        	    </div>
+        	    #end
+            </div>
+        </div>
+    </div>
+</div>
+#end

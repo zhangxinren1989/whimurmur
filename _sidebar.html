@@ -1,0 +1,443 @@
+#define sidebarResource()
+<script src="js/plugin/tagcloud.js"></script>
+<script src="js/sidebar-custom.js"></script>
+#end
+
+#define sidebarContent()
+<div class="row" id="sidebar">
+<div class="right-card bg-light" style="order: -1">
+    <div class="right-card-main">
+        #if(USER)
+        <div class="right-card-title">欢迎你，#(USER.nickname ??)</div>
+        <div class="cl-card-content">
+            <img src="#(USER.avatar ??)" class="img-thumbnail w-100" alt="">
+            <div class="btn-group-vertical btn-block">
+              <a href="/ucenter" class="btn btn-primary btn-sm" aria-hidden="true"><i class="oi oi-person"></i> 个人中心</a>
+              <a href="#(CPATH)/ucenter/article/write" class="btn btn-primary btn-sm" aria-hidden="true"><i class="oi oi-pencil"></i> 投稿</a>
+              <a href="#(CPATH)/ucenter/doLogout?csrf_token=#(CSRF_TOKEN)" class="btn btn-primary btn-sm" aria-hidden="true"><i class="oi oi-account-logout"></i> 退出</a>
+            </div>
+        </div>
+        #else
+        <div class="right-card-title">注册登陆</div>
+        <div class="cl-card-content text-center">
+            <img src="img/avatar.png" class="rounded w-100" alt="">
+            <p>
+              <a href="/user/login" class="btn btn-primary btn-sm m-1" aria-hidden="true"><i class="oi oi-account-login"></i> 登陆</a>
+              <a href="/user/register" class="btn btn-primary btn-sm m-1" aria-hidden="true" ><i class="oi oi-people"></i> 注册</a>
+            </p>
+        </div>
+        #end
+    </div>
+</div>
+
+#if(option('calmlog_ex_card_search') != 'hidden')
+<div id='card-search' class="right-card bg-light" style="order: #(option('calmlog_ex_card_search_seq') ?? 0)">
+    <div class="right-card-main">
+        <div class="right-card-title">搜索</div>
+        <div id="search" class="cl-card-content">
+            
+            <div class="card">
+              <div class="card-body pb-0 bg-light">
+                <div class="card-text">
+                   <form role="form" action="/article/search">
+                      <label for="siteSearch">本站搜索</label>
+                        <div class="input-group mb-2">
+                          <input type="text" class="form-control form-control-sm" placeholder="请输入搜索内容" id="siteSearch" name="keyword">
+                          <div class="input-group-append">
+                            <button type='submit' class="input-group-text btn btn-sm btn-primary"><i class="fa fa-search"></i></button>
+                          </div>
+                        </div>
+                    </form>
+                </div>
+              </div>
+              <div class="card-body hidden bg-light" id="card-page-search">
+                <div class="card-text">
+                    <label for="pageSearch">本页内搜索</label>
+                    <div class="input-group mb-2">
+                      <input type="text" class="form-control form-control-sm" placeholder="请输入搜索内容" id="pageSearch" name="">
+                      <!--<div class="input-group-append">
+                        <a class="input-group-text btn btn-sm btn-info"><i class="fa fa-search"></i></a>
+                      </div>-->
+                      <div class="input-group-append" id="searchPage">
+                        <button class="input-group-text btn btn-sm btn-primary"><i class="fa fa-location-arrow"></i></button>
+                      </div>
+                    </div>
+                </div>
+              </div>
+                <div class="text-center pb-3 bg-light">
+                    #if(option('calmlog_ex_external_search_1' ??) && option('calmlog_ex_external_search_1' ??).split('\|').length == 2)
+                    <span class="card-link"><a href="#(option('calmlog_ex_external_search_1' ??).split('\|')[1])" target="_blank">#(option('calmlog_ex_external_search_1' ??).split('\|')[0])</a></span>
+                    #end
+                    #if(option('calmlog_ex_external_search_2' ??) && option('calmlog_ex_external_search_2' ??).split('\|').length == 2)
+                    <span class="card-link"><a href="#(option('calmlog_ex_external_search_2' ??).split('\|')[1])" target="_blank">#(option('calmlog_ex_external_search_2' ??).split('\|')[0])</a></span>
+                    #end
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+#end
+
+#if(option('calmlog_ex_card_hotWord') != 'hidden')
+<div id='card-hotWord' class="right-card bg-light" style="order: #(option('calmlog_ex_card_hotWord_seq') ?? 0)">
+    <div class="right-card-main">
+        <div class="right-card-title">每日热词</div>
+        <div class="cl-card-content">
+            <div class="card" id="hotWord">
+                <div class="card-header">&nbsp;</div>
+                <div class="card-body bg-light">
+                    <div class="card-text">
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+        <span id="hotword-change" class="badge badge-pill badge-primary">换一换</span>
+    </div>
+</div>
+#end
+
+#if(option('calmlog_ex_card_article') != 'hidden')
+<div id='card-article' class="right-card bg-light" style="order: #(option('calmlog_ex_card_article_seq') ?? 0)">
+
+    <div class="right-card-main">
+        #articles(count = 5, hiddenFlag=true)
+        <div class="right-card-title">最新文章</div>
+        <ul class="right-recommended-list cl-card-content">
+            
+            #for(article : articles)
+            <li>
+                <a href="#(article.url)" title="#(article.title ??)" target="#(option('calmlog_ex_link_to_blank') && article.linkTo ? '_blank' : '_self')">
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    #(article.title ??)
+                </a>
+            </li>
+            #end
+            
+        </ul>
+        #end
+        <div class="right-recommended">
+            <a href="##">
+                <img src="#option('calmlog_ex_article_img_1', 'https://api.ixiaowai.cn/api/api.php')" class="img-fluid" alt="随机图片/小歪API">
+            </a>
+        </div>
+        #articles(count = 5, orderBy="comment_count desc", hiddenFlag=true)
+        <div class="right-card-title">热评文章排行</div>
+        <ul class="right-recommended-list cl-card-content">
+            
+            #for(article : articles)
+            <li>
+                <a href="#(article.url)" title="#(article.title ??)" target="#(option('calmlog_ex_link_to_blank') && article.linkTo ? '_blank' : '_self')">
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    #(article.title ??)
+                </a>
+            </li>
+            #end
+            
+        </ul>
+        #end
+        <div class="right-recommended">
+            <a href="##">
+                <img src="#option('calmlog_ex_article_img_2', 'https://api.ixiaowai.cn/mcapi/mcapi.php')" class="img-fluid" alt="随机图片/小歪API">
+            </a>
+        </div>
+        #articlesEx(count = 5, orderBy="thumbUp.thumb_up_num desc", hiddenFlag=true)
+        <div class="right-card-title">点赞文章排行</div>
+        <ul class="right-recommended-list cl-card-content">
+            
+            #for(article : articles)
+            <li>
+                <a href="#(article.url)" title="#(article.title ??)" target="#(option('calmlog_ex_link_to_blank') && article.linkTo ? '_blank' : '_self')">
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    #(article.title ??)
+                </a>
+            </li>
+            #end
+            
+        </ul>
+        #end
+    </div>
+</div>
+#end
+
+#if(option("calmlog_ex_side_ad_1" ??) && option('calmlog_ex_card_side_ad_1') != 'hidden')
+<div class="right-card bg-light" id='card-side-ad-1' style="order: #(option('calmlog_ex_card_side_ad_1_seq') ?? 0)">
+    <div class="right-card-main">
+        <div class="right-card-title">广告位-1-动动手帮助网站活下去</div>
+        <div id="side-ad-1" class="cl-card-content ad-content">
+            #option("calmlog_ex_side_ad_1" ??)
+        </div>
+    </div>
+</div>
+#end
+
+#if(option('calmlog_ex_card_tag') != 'hidden')
+<div class="right-card bg-light" id='card-tag' style="order: #(option('calmlog_ex_card_tag_seq') ?? 0)">
+    <div class="right-card-main">
+        #tags(count = 999)
+        <div class="right-card-title">文章标签</div>
+        <ul class="label cl-card-content #(option('calmlog_ex_article-tag-cloud') ? 'tagcloud' : '')">
+            
+            #for(tag : tags)
+            <li class="#(option('calmlog_ex_article-tag-cloud') ? 'hidden' : '')"><a class="fs-1 badge badge-primary ellipsis" href="#(tag.url)">#(tag.title)</a></li>
+            #end
+            
+        </ul>
+        #end
+    </div>
+    
+    <div class="right-card-main">
+        #productTagList(count = 999)
+        <div class="right-card-title">产品标签</div>
+        <ul class="label cl-card-content #(option('calmlog_ex_product-tag-cloud') ? 'tagcloud' : '')">
+            
+            #for(tag : tags)
+            <li class="#(option('calmlog_ex_product-tag-cloud') ? 'hidden' : '')"><a class="fs-1 badge badge-primary ellipsis" href="#(tag.url)">#(tag.title)</a></li>
+            #end
+            
+        </ul>
+        #end
+    </div>
+</div>
+#end
+
+#if(option('calmlog_ex_card_self_archive') != 'hidden' || option('calmlog_ex_card_reprint_archive') != 'hidden')
+<div id='card-archive' class="right-card bg-light" style="order: #(option('calmlog_ex_card_archive_seq') ?? 0)">
+    #if(option('calmlog_ex_card_self_archive') != 'hidden')
+    <div class="right-card-main">
+        <div class="right-card-title">原创文章时间线</div>
+        <div class="cl-card-content">
+            <div class="card" id="selfArticleArchive">
+                <div class="card-body bg-light">
+                    <div><a href="#selfArticleMonthly" data-toggle="collapse">原创文章详情</a></div>
+                    <div class="card-text collapse" id='selfArticleMonthly'>
+                        <table class="table w-100">
+                            <thead>
+                              <tr>
+                                <th>月份</th>
+                                <th>原创文章数</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer">
+                        <div class='year-article'></div>
+                    </div>
+            </div>
+        </div>
+    </div>
+    #end
+    
+    #if(option('calmlog_ex_card_reprint_archive') != 'hidden')
+    <div class="right-card-main">
+        <div class="right-card-title">转载文章时间线</div>
+        <div class="cl-card-content">
+            <div class="card" id="reprintArticleArchive">
+                <div class="card-body bg-light">
+                    <div><a href="#reprintArticleMonthly" data-toggle="collapse">转载文章详情</a></div>
+                    <div class="card-text collapse" id='reprintArticleMonthly'>
+                       <table class="table w-100">
+                            <thead>
+                              <tr>
+                                <th>月份</th>
+                                <th>转载文章数</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class='year-article'></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    #end
+    
+</div>
+#end
+
+#if(option('calmlog_ex_card_product') != 'hidden')
+<div class="right-card bg-light" id='card-product' style="order: #(option('calmlog_ex_card_product_seq') ?? 0)">
+
+    <div class="right-card-main">
+        #products(count = 5)
+        <div class="right-card-title">最新商品</div>
+        <ul class="right-recommended-list cl-card-content">
+            
+            #for(product : products)
+            <li>
+                <a href="#(product.url)" title="#(product.title ??)">
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    #(product.title ??)
+                </a>
+            </li>
+            #end
+            
+        </ul>
+        #end
+        <div class="right-recommended">
+            <a href="##">
+                <img src="#option('calmlog_ex_product_img_1', 'https://uploadbeta.com/api/pictures/random')" class="img-fluid" alt="随机图片/必应">
+            </a>
+        </div>
+        <hr>
+        #products(count = 5, orderBy="sales_count desc")
+        <div class="right-card-title">热卖商品</div>
+        <ul class="right-recommended-list cl-card-content">
+            
+            #for(product : products)
+            <li>
+                <a href="#(product.url)" title="#(product.title ??)">
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    #(product.title ??)
+                </a>
+            </li>
+            #end
+            
+        </ul>
+        #end
+         <div class="right-recommended">
+            <a href="##">
+                <img src="#option('calmlog_ex_product_img_2', 'https://api.ixiaowai.cn/gqapi/gqapi.php')" class="img-fluid" alt="随机图片/小歪API">
+            </a>
+        </div>
+        #products(count = 5, flag="free")
+        <div class="right-card-title">免费商品</div>
+        <ul class="right-recommended-list cl-card-content">
+            
+            #for(product : products)
+            <li>
+                <a href="#(product.url)" title="#(product.title ??)">
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    #(product.title ??)
+                </a>
+            </li>
+            #end
+            
+            
+        </ul>
+        #end
+    </div>
+</div>
+#end
+
+#if(option('calmlog_ex_card_site_info') != 'hidden')
+<div class="right-card bg-light" id='card-site-info' style="order: #(option('calmlog_ex_card_site_info_seq') ?? 0)">
+    <div class="right-card-main">
+        <div class="right-card-title">网站信息</div>
+        <!--<div class="cl-code">
+            <img src="#option('calmlog_qrcode','img/code.jpg')" class="img-fluid" alt="">
+            <p>#option('calmlog_qrcode_text')</p>
+        </div>-->
+        <div class="cl-card-content">
+            <div class="card" id="site-info">
+                <!--<div class="card-header">域名的来历</div>-->
+                <img class="card-img-top" src="#option('calmlog_ex_site_info_img', 'img/default-img.png')" alt="Card image">
+                <div class="card-body bg-light">
+                    <!--<h4 class="card-title">其实是给自己的新年礼物</h4>-->
+                    <div class="card-text">
+                        <div><span class="text-info">网站名称：</span><span>#(WEB_NAME)</span></div>
+                        #set(path=C.request.servletPath)
+                        
+                        #if(option('whimurmur_site_begin' ??) && option('whimurmur_site_begin' ??).split('-').length == 3)
+                            #set(beginTime=option('whimurmur_site_begin' ??).split('-'))
+                            #set(year=java.lang.Integer::parseInt(beginTime[0]))
+                            #set(month=java.lang.Integer::parseInt(beginTime[1]))
+                            #set(day=java.lang.Integer::parseInt(beginTime[2]))
+                            #set(siteFrom=java.time.LocalDate::of(year, month, day))
+                            #set(now=java.time.LocalDate::now())
+                            #set(runDays=siteFrom.until(now, java.time.temporal.ChronoUnit::DAYS))
+                            #if(option('whimurmur_site_begin_first'))
+                                #set(runDays=runDays+1)
+                            #end
+                            <div><span class="text-info">网站运行天数：</span><span>#(runDays)天</span></div>
+                        #end
+                        
+                        #if(option('site_system' ??))
+                            #set(siteSystem=option('site_system' ??).split('\|'))
+                            <div><span class="text-info">网站系统：</span><span><a href="#if(siteSystem.length > 1) #(siteSystem[1]) #else '##' #end" target="_blank">#(siteSystem[0])</a></span></div>
+                        #end
+                        
+                        #if(path.startsWith("/article/category/") || path.startsWith("/article/tag/"))
+                            <div><span class="text-info">文章分类总数：</span><span>#categories(count=9999) #(categories.size() ?? 0) #end</span></div>
+                            <div><span class="text-info">当前分类/标签文章总数：</span><span>#articlePageEx(pageSize=1) #(articlePageEx.totalRow) #end</span></div>
+                        #else if(path.startsWith("/product/category/") || path.startsWith("/product/tag/"))
+                            <div><span class="text-info">当前分类/标签产品总数：</span><span>#productPage(pageSize=1) #(productPage.totalRow) #end</span></div>
+                        #else
+                            <div><span class="text-info">文章分类总数：</span><span>#categories(count=9999) #(categories.size() ?? 0) #end</span></div>
+                            <div><span class="text-info">文章总数：</span><span>#articlePageEx(pageSize=1) #(articlePageEx.totalRow) #end</span></div>
+                            <div><span class="text-info">产品总数：</span><span>#productPage(pageSize=1) #(productPage.totalRow) #end</span></div>
+                        #end
+                        <div><span class="text-info">标签总数：</span><span>#tags(count=9999) #(tags.size() ?? 0) #end</span></div>
+                        
+                        #if(option("calmlog_ex_site_info" ??))
+                            #for(info: linesOption("calmlog_ex_site_info", '\|'))
+                            <div><span class="text-info">#(info[0])：</span><span>#(info[1])</span></div>
+                            #end
+                        #end
+                    </div>
+                    <!--<div class="text-center">
+                        <span class="card-link"><a href="https://www.baidu.com" target="_blank">百度</a></span>
+                        <span class="card-link"><a href="https://www.leetcode-cn.com" target="_blank">力扣中国</a></span>
+                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+#end
+
+#if(option('calmlog_ex_card_contact') != 'hidden')
+<div class="right-card bg-light" id='card-contact' style="order: #(option('calmlog_ex_card_contact_seq') ?? 0)">
+    <div class="right-card-main">
+        <div class="right-card-title">联系方式</div>
+        <div class="cl-card-content">
+            <img src="#option('calmlog_ex_contact_me','img/default-img.png')" class="img-fluid" alt="">
+            <p class="text-center">#option('calmlog_ex_contact_text')</p>
+        </div>
+    </div>
+</div>
+#end
+
+#if(option("calmlog_ex_side_ad_2" ??) && (option("calmlog_ex_card_side_ad_2") != 'hidden'))
+<div class="right-card bg-light" id='card-side-ad-2' style="order: #(option('calmlog_ex_card_side_ad_2_seq') ?? 0)">
+    <div class="right-card-main">
+        <div class="right-card-title">广告位-2-动动手帮助网站活下去</div>
+        <div id="side-ad-2" class="cl-card-content ad-content">
+            #option("calmlog_ex_side_ad_2" ??)
+        </div>
+    </div>
+</div>
+#end
+<!--<div class="right-card">
+    <div class="right-card-main pb-3">
+        <div class="right-card-title">我是网站-未完成-仅展示</div>
+        <div class="mx-3">
+            <div class="card" id="site-info">
+                <div class="card-header">域名的来历</div>
+                <img class="card-img-top" src="/attachment/20200212/65ee363c8bac47a798a59aad002668b4.jfif" alt="Card image">
+                <div class="card-body">
+                    <h4 class="card-title">其实是给自己的新年礼物</h4>
+                    <p class="card-text">2020年来了，在2019年的最后一天，送给自己一个礼物吧，送什么呢？送个域名吧，别人就能在网络上找到我了，我好像拥有了整个世界。感慨好名字都被。。。我换头改尾，自己都不知道域名proprogrammar是什么意思，高级程序员？专业语法？算了，先取名，再想意义。。。</p>
+                    <!--<div class="text-center">
+                        <span class="card-link"><a href="https://www.baidu.com" target="_blank">百度</a></span>
+                        <span class="card-link"><a href="https://www.leetcode-cn.com" target="_blank">力扣中国</a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>-->
+<div id="rightBarAppendix">
+    <div id="searchAppendix">
+        <a id="searchPageAppendix" class="" title="页内搜索" data-toggle="tooltip"><img alt="" id="searchPageAppImg" src="img/icon/location.png" /></a>
+    </div>
+</div>
+</div>
+#end

@@ -1,0 +1,288 @@
+#define layout()
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Expires" content="Sat, 31 Jan 2026 00:00:00 GMT" />
+    <meta http-equiv="Cache-control" content="max-age=7200">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no,minimum-scale=1,maximum-scale=1">
+    <title>#(WEB_TITLE ??)</title>
+    <meta name="keywords" content="#(SEO_KEYWORDS ??)">
+    <meta name="description" content="#(SEO_DESCRIPTION ??)">
+    
+    <link rel="icon" href="#option('calmlog_ex_favicon')" type="image/x-icon">
+    <link rel="shortcut icon" href="#option('calmlog_ex_favicon')" type="image/x-icon">
+    <script src="/static/components/jquery/jquery.min.js"></script>
+    <script src="js/plugin/jquery/jquery.cookie.min.js"></script>
+    <!--bootstrap4-->
+    <link id="theme-css" name="#option('calmlog_ex_theme', 'base')" href="" rel="stylesheet">
+    <script>
+        // 页面模板路径
+        tPath = '#(C.request.contextPath)' + '#(TPATH)' + '/';
+        userName = '#(USER.nickname??)';
+        webName = '#(WEB_NAME ??)';
+        bgFollowTheme = #(option('calmlog_ex_bg_follow_theme') ?? false);
+        oneSentenceType = '#(option('calmlog_ex_one_sentence_type') ?? 'yyapi')';
+        var oneSentencesource = {
+            alapiDog: ['https://v1.alapi.cn/api/dog?format=json','舔狗日记', "#option('calmlog_ex_one_sentence_dog_image', 'img/oneSentence/oneSentenceDog.png')"],
+            alapiQinhua: ['https://v1.alapi.cn/api/qinghua?format=json','土味情话', "#option('calmlog_ex_one_sentence_qinghua_image', 'img/oneSentence/oneSentenceQinHua.png')"],
+            alapiSoul: ['https://v1.alapi.cn/api/soul?format=json','心灵毒鸡汤', "#option('calmlog_ex_one_sentence_hitokoto_image', 'img/oneSentence/oneSentenceSoul.png')"],
+            ylapiHitokoto: ['https://v1.hitokoto.cn/?encode=json','一言', "#option('calmlog_ex_one_sentence_soul_image', 'img/oneSentence/oneSentenceHitokoto.png')"],
+            writeImage: "#option('calmlog_ex_one_sentence_write_image', 'img/oneSentence/oneSentenceWrite.png')"
+        }
+        
+        if(!$.cookie()["curTheme"]){
+            #if(option("calmlog_ex_night_theme_start") && option("calmlog_ex_night_theme_end") && option("calmlog_ex_night_theme"))
+                #set(nightStart=java.time.LocalTime::parse(option("calmlog_ex_night_theme_start"), java.time.format.DateTimeFormatter::ofPattern("HH:mm")))
+                #set(nightEnd=java.time.LocalTime::parse(option("calmlog_ex_night_theme_end"), java.time.format.DateTimeFormatter::ofPattern("HH:mm")))
+                #set(now=java.time.LocalTime::now())
+                #set(startMinute=nightStart.getHour() * 60 + nightStart.getMinute())
+                #set(endMinute=nightEnd.getHour() * 60 + nightEnd.getMinute())
+                #set(nowMinute=now.getHour() * 60 + now.getMinute())
+                
+                #if(startMinute < endMinute && startMinute <= nowMinute && endMinute >= nowMinute)
+                    $.cookie("curTheme", "#option("calmlog_ex_night_theme")", {path: "/"});
+                #else if(startMinute >= endMinute && startMinute <= nowMinute || endMinute >= nowMinute)
+                    $.cookie("curTheme", "#option("calmlog_ex_night_theme")", {path: "/"});
+                #else
+                    // 设置path很重要，否则只对当前路径及子路径有效
+                    $.cookie("curTheme", $("#theme-css").attr("name"), {path: "/"});
+                #end
+            #else
+                // 设置path很重要，否则只对当前路径及子路径有效
+                $.cookie("curTheme", $("#theme-css").attr("name"), {path: "/"});
+            #end
+        }
+        
+        //$("#theme-css").attr("href", "/templates/calmlog_ex/bootstrap/css/theme/bootstrap." + $.cookie()["curTheme"] + ".min.css");
+        document.write("<link id='link-" + $.cookie()['curTheme'] + "' href='" + tPath + "bootstrap/css/theme/bootstrap." + $.cookie()['curTheme'] + ".min.css' rel='stylesheet'>");
+    </script>
+    <link href="bootstrap/css/open-iconic-bootstrap.min.css" rel="stylesheet">
+    <!--自定义css-->
+    <link href="css/plugin/barrager/barrager.css" rel="stylesheet">
+    <link href="css/whimurmur.css" rel="stylesheet">
+    <link href="/static/components/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/components/highlight/styles/github.css">
+    <link href="/static/components/toastr/toastr.min.css" rel="stylesheet">
+    
+    <!--自定义html-->
+    #option("calmlog_ex_custom_head_html" ??)
+    <!--自定义css-->
+    #option("calmlog_ex_custom_css" ??)
+    
+    #@css?()
+    
+    #option("calmlog_ex_custom_head_js" ??)
+</head>
+<body>
+    <!--自定义js-->
+    #option("calmlog_ex_custom_pre_js" ??)
+    
+    <script>
+        if($("body").css("background-image")){
+            $.cookie("body-background-image", $("body").css("background-image"), {path: "/"});
+        }else{
+            $.cookie("body-background-image", "none", {path: "/"});
+        }
+        $("body").css("background-image", "none")
+    </script>
+
+<input type="hidden" id="userName" value="#(USER ? USER.nickname : '')" />
+<input type="hidden" id="userId" value="#(USER ? USER.id : '')" />
+<div class="cl-header container-fluid bg-light">
+    <div class="header-content container">
+        <nav class="navbar navbar-expand-md">
+            <a class="navbar-brand" href="/">
+                <img src="#option('calmlog_ex_logo','/templates/calmlog_ex/img/logo.jpg')" width="144" alt="">
+            </a>
+            <button class="navbar-toggler navbar-light" type="button" data-toggle="collapse" data-target="#menu" aria-controls="menu" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="menu">
+                <ul class="navbar-nav closeFloat">
+                    
+                    #set(menuColor={})
+                    #if(option("calmlog_ex_menu_highlight"))
+                        #for(opt: linesOption("calmlog_ex_menu_highlight", '\|'))
+                            #set(menuColor[opt[0]] = opt[1])
+                        #end
+                    #end
+                    
+                    #for(menu : MENUS)
+                    <li data-menu="#(menu.text ??) >" class='nav-item'>
+                        <a class='nav-link #(menu.isActive ? "active" : "")' href="#(menu.url == null ? 'javascript:;':menu.url)" #(menuColor[menu.text] ? "style='color: " + menuColor[menu.text] + "'" : "") target="#(menu.target ??)"><i data-icon="#(menu.icon ??)" class="fa fa-#(menu.icon ??) fa-fw"></i>&nbsp;<span>#(menu.text ??)</span></a>
+                        #if(menu.hasChild())
+                            <ul class='bg-light'>
+                                #for(childMenu1 : menu.getChilds())
+                                    <li data-menu="#(childMenu1.text ??) >" class='nav-item'>
+                                        <a class='nav-link' #(childMenu1.isActive && menuColor[menu.text]? "style='color: " + menuColor[menu.text] + "'" : "") href="#(childMenu1.url == null ? 'javascript:;':childMenu1.url)" target="#(childMenu1.target ??)"><i data-icon="#(childMenu1.icon ??)" class="fa fa-#(childMenu1.icon ??) fa-fw"></i>&nbsp;<span>#(childMenu1.text ??)#(childMenu1.hasChild() ? " >" : "")</span></a>
+                                        #if(childMenu1.hasChild())
+                                        <ul class='bg-light'>
+                                            #for(childMenu2 : childMenu1.getChilds())
+                                                <li data-menu="#(childMenu2.text ??) >" class='nav-item'>
+                                                    <a class='nav-link' #(childMenu2.isActive && menuColor[menu.text]? "style='color: " + menuColor[menu.text] + "'" : "") href="#(childMenu2.url == null ? 'javascript:;':childMenu2.url)" target="#(childMenu2.target ??)"><i data-icon="#(childMenu2.icon ??)" class="fa fa-#(childMenu2.icon ??) fa-fw"></i>&nbsp;<span>#(childMenu2.text ??)#(childMenu2.hasChild() ? " >" : "")</span></a>
+                                                    #if(childMenu2.hasChild())
+                                                    <ul class='bg-light'>
+                                                        #for(childMenu3 : childMenu2.getChilds())
+                                                            <li data-menu="#(childMenu3.text ??) >" class='nav-item'>
+                                                                <a class='nav-link' #(childMenu3.isActive && menuColor[menu.text]? "style='color: " + menuColor[menu.text] + "'" : "") href="#(childMenu3.url == null ? 'javascript:;':childMenu3.url)" target="#(childMenu3.target ??)"><i data-icon="#(childMenu3.icon ??)" class="fa fa-#(childMenu3.icon ??) fa-fw"></i>&nbsp;<span>#(childMenu3.text ??)</span></a>
+                                                                #if(childMenu3.hasChild())
+                                                                <ul class='bg-light'>
+                                                                    #for(childMenu4 : childMenu3.getChilds())
+                                                                        <li data-menu="#(childMenu4.text ??) >" class='nav-item'>
+                                                                            <a class='nav-link' #(childMenu4.isActive && menuColor[menu.text]? "style='color: " + menuColor[menu.text] + "'" : "") href="#(childMenu4.url == null ? 'javascript:;':childMenu4.url)" target="#(childMenu4.target ??)"><i data-icon="#(childMenu4.icon ??)" class="fa fa-#(childMenu4.icon ??) fa-fw"></i>&nbsp;<span>#(childMenu4.text ??)</span></a>
+                                                                        </li>
+                                                                    #end
+                                                                </ul>
+                                                                #end
+                                                            </li>    
+                                                        #end
+                                                    </ul>
+                                                    #end
+                                                </li>
+                                            #end
+                                        </ul>
+                                        #end
+                                    </li>
+                                #end
+                            </ul>
+                        #end
+                    </li>
+                    #end
+                </ul>
+            </div>
+        </nav>
+    </div>
+</div>
+
+<div class="cl-cantainer container">
+    <div class="row">
+
+        #@content()
+
+    </div>
+</div>
+
+<div id="footer" class="container-fluid cl-footer bg-light">
+    <div class="container">
+        <div class="">
+            #if(option("calmlog_ex_footer_img" ??))
+                #set(rand=java.lang.Math::random())
+                <div style="position: relative;height: 3em; width: 144px;display:inline-block;vertical-align:middle">
+                #for(imgOpts: linesOption("calmlog_ex_footer_img", '\|'))
+                        #if(rand >= for.index * 1.0 / for.size && rand < for.count * 1.0 / for.size)
+                        <a style="position: absolute;top:0;left:0;" class="navbar-brand footer-img"  href="##" onclick="footerSlideWord(event, #(for.size))" data-index="#(for.index)"
+                            data-title="#(imgOpts.size() > 1 ? imgOpts[1] : '')" data-url="#(imgOpts.size() > 2 ? imgOpts[2] : '')">
+                            <img src="#(imgOpts[0])" class="img-fluid" style="max-height:2.5em" alt="页脚图片">
+                        </a>
+                        #else
+                        <a style="position: absolute; display: none;top:0;left:0;max-height:40px" class="navbar-brand footer-img"  href="##" onclick="footerSlideWord(event, #(for.size))" data-index="#(for.index)"
+                            data-title="#(imgOpts.size() > 1 ? imgOpts[1] : '')" data-url="#(imgOpts.size() > 2 ? imgOpts[2] : '')">
+                            <img src="#(imgOpts[0])" class="img-fluid" style="max-height:2.5em" alt="页脚图片">
+                        </a>
+                        #end
+                #end
+                </div>
+            #end
+            
+            <span class="footer-declare" style="text-decorate:none">#(WEB_COPYRIGHT ? WEB_COPYRIGHT : 'designed by whisper(轻语) powered by jpress copyright @ 2020~2020 
+            <a title="whimurmur最新版" id="calmlog_ex_version" href="/article/whimurmurUpdated">whimurmur(v1.5.1)</a>')&nbsp;&nbsp;#(WEB_IPC_NO ? '<a href="http://beian.miit.gov.cn">' + WEB_IPC_NO + '</a>' : '')
+    		</span>
+    	</div>
+    	
+    	#if(linesOption('whimurmur_friendly_link') && linesOption('whimurmur_friendly_link').size() > 0 && (C.request.servletPath == '/' || C.request.servletPath == '/index'))
+    	<div class="footer-friendly-link">
+    	    <div><span class="footer-friendly-link-title text-secondary">友情链接</span>#if(option('whimurmur_friendly_link_text'))<span style="font-size: 1.5rem"> | </span><span class="footer-friendly-link-text text-secondary">#option('whimurmur_friendly_link_text')</span>#end</div>
+    	    <div>
+    	        #for(friendlyLink : linesOption('whimurmur_friendly_link','\|'))
+    	            <span class="friendly-link-site"><a href="#(friendlyLink[1])" target="_blank">#(friendlyLink[0])</a></span>
+    	        #end
+    	    </div>
+    	</div>
+    	#end
+    
+        <div id="appendix">
+            <div id="theme" class='theme-hidden bg-light noSel'>
+                <div id="theme-lens">
+                    <a data-toggle="tooltip" title="改变主题"><img src="img/icon/color_lens.png" /></a>
+                </div>
+                <div id="theme-settings" class="clearfix">
+                    <div>
+                        <span id='base' class="theme" data-toggle="tooltip" title="基础主题"></span>
+                        <span id='blue_sky' class="theme" data-toggle="tooltip" title="蓝色天空主题"></span>
+                        <span id='crisp' class="theme" data-toggle="tooltip" title="艳丽主题"></span>
+                        <span id='darkly' class="theme" data-toggle="tooltip" title="深色主题"></span>
+                        <span id='grey' class="theme" data-toggle="tooltip" title="灰色主题"></span>
+                        <span id='light_shadow' class="theme" data-toggle="tooltip" title="浅色主题"></span>
+                    </div>
+                    <div>
+                        <span id='modern' class="theme" data-toggle="tooltip" title="现代主题"></span>
+                        <span id='orange' class="theme" data-toggle="tooltip" title="橘色主题"></span>
+                        <span id='purple' class="theme" data-toggle="tooltip" title="紫色主题"></span>
+                        <span id='square' class="theme" data-toggle="tooltip" title="方正主题"></span>
+                        <span id='warm' class="theme" data-toggle="tooltip" title="春意主题"></span>
+                        <span id='dark_blue' class="theme" data-toggle="tooltip" title="深蓝主题"></span>
+                    </div>
+                </div>
+                <div id='font-settings' class='clearfix'></div>
+            </div>
+            <div id="top"><a data-toggle="tooltip" title="返回顶部"><img src="img/icon/up_arrow.png" /></a></div>
+            <div id="moveTo">
+                <a data-toggle="tooltip" title="当前双击标记处" id="moveCur"><img src="img/icon/letter_o.png" /></a>
+                <a id="movePost" data-toggle="tooltip" title="更早的标记"><img alt="当前双击处" src="img/icon/left_arrow.png" /></a>
+                <a id="movePre" data-toggle="tooltip" title="较近的标记"><img src="img/icon/right_arrow.png" /></a>
+            </div>
+        </div>
+    
+    </div>
+</div>
+<div id="bin"></div>
+<!--<div id="loader" class="bg-loader">
+	<div class="l_main">
+		<div class="l_square"><span></span><span></span><span></span></div>
+		<div class="l_square"><span></span><span></span><span></span></div>
+		<div class="l_square"><span></span><span></span><span></span></div>
+		<div class="l_square"><span></span><span></span><span></span></div>
+	</div>
+</div>-->
+
+<!--自定义html-->
+#option("calmlog_ex_custom_body_html" ??)
+
+<script src="js/plugin/barrager/jquery.barrager.min.js"></script>
+<script src="js/plugin/device.min.js"></script>
+<script src="js/plugin/fontdetect.v0.3.js"></script>
+<script src="js/custom.js"></script>
+
+
+#@script?()
+
+<script src="bootstrap/js/popper.min.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/components/highlight/highlight.pack.js"></script>
+<script src="/static/components/toastr/toastr.min.js"></script>
+#if(option('calmlog_ex_live2d'))
+<script src="js/plugin/live2d/autoload.js"></script>
+#end
+<!--<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>-->
+
+<!--自定义js-->
+#option("calmlog_ex_custom_after_js" ??)
+
+<!-- 主题css预加载 -->
+<link rel="prefetch" href="#(TPATH)/bootstrap/css/theme/bootstrap.base.min.css">
+<link rel="prefetch" href="#(TPATH)/bootstrap/css/theme/bootstrap.blue_sky.min.css">
+<link rel="prefetch" href="#(TPATH)/bootstrap/css/theme/bootstrap.crisp.min.css">
+<link rel="prefetch" href="#(TPATH)/bootstrap/css/theme/bootstrap.dark_blue.min.css" as="css">
+<link rel="prefetch" href="#(TPATH)/bootstrap/css/theme/bootstrap.darkly.min.css" as="css">
+<link rel="prefetch" href="#(TPATH)/bootstrap/css/theme/bootstrap.grey.min.css" as="css">
+<link rel="prefetch" href="#(TPATH)/bootstrap/css/theme/bootstrap.light_shadow.min.css" as="css">
+<link rel="prefetch" href="#(TPATH)/bootstrap/css/theme/bootstrap.modern.min.css" as="css">
+<link rel="prefetch" href="#(TPATH)/bootstrap/css/theme/bootstrap.orange.min.css" as="css">
+<link rel="prefetch" href="#(TPATH)/bootstrap/css/theme/bootstrap.purple.min.css" as="css">
+<link rel="prefetch" href="#(TPATH)/bootstrap/css/theme/bootstrap.square.min.css" as="css">
+<link rel="prefetch" href="#(TPATH)/bootstrap/css/theme/bootstrap.warm.min.css" as="css">
+</body>
+</html>
+#end

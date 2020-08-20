@@ -1,0 +1,271 @@
+#include("./layout.html")
+#include("_sidebar.html")
+#@layout()
+
+#define script()
+<script src="js/index-custom.js"></script>
+#if(option('calmlog_ex_one_sentence_show') != 'hidden')
+<script src="js/plugin/zoomify/zoomify.min.js"></script>
+<script src="js/plugin/oneSentence/html2canvas.min.js"></script>
+<script>
+    initOneSentence();
+</script>
+#@sidebarResource()
+#end
+#end
+
+#define content()
+#if(option("whimurmur_index_top_ad" ??))
+<div class="col-md-12 col-lg-12 col-xl-12">
+    <div class="index-top-ad bg-light" id="index-top-ad">
+        <!--<div class="content-ad-title">广告位-动动手帮助网站活下去</div>-->
+        <div class="index-top-ad-main pb-3">
+            <div id="index-top-ad-content" class="m-1 ad-content">
+                #option("whimurmur_index_top_ad" ??)
+            </div>
+        </div>
+    </div>
+</div>
+#end
+<div class="col-md-8 col-lg-8 col-xl-9 #(option('calmlog_ex_sidebar_position') == 'left' ? 'offset-md-4 offset-lg-4 offset-xl-3 cl-right' : 'cl-left')">
+    #if(linesOption("calmlog_ex_notice") && linesOption("calmlog_ex_notice").size() > 0)
+    <div class="alert alert-light">
+      <span><i class="fa fa-bullhorn fa-fw"></i><strong>通知</strong>&nbsp;#(linesOption("calmlog_ex_notice")[0] ??)</span>
+    </div>
+    #end
+    <div class="recommend-index row">
+
+        #if(option('calmlog_ex_slide_show') != 'hidden' && linesOption('calmlog_ex_slides') && linesOption('calmlog_ex_slides').size() > 0)
+        <div class="recommend-top col-md-12 col-lg-12 col-xl-12">
+            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    #for(slide : linesOption('calmlog_ex_slides'))
+                    <li data-target="#carouselExampleIndicators" data-slide-to="#(for.index)" class="#(for.index == 0 ? 'active' : '')"></li>
+                    #end
+                </ol>
+                <div class="carousel-inner">
+                    #for(slide : linesOption('calmlog_ex_slides','\|'))
+                    <div class="carousel-item #(for.index == 0 ? 'active' : '')">
+                        <a href="#(slide.size() > 1 && slide[1] ? slide[1] : '##')" target="#(slide.size() > 1 && slide[1] && slide[1].endsWith('#b')? '_blank' : '_self')">
+                            <img class="d-block w-100" src="#(slide[0])" alt="slide" title="#(slide.size() > 2 && slide[2] ? slide[2] : '')"></a>
+                        <p class="cl-inner-footer text-primary">#(slide.size() > 2 && slide[2] ? slide[2] : '')</p>
+                    </div>
+                    #end
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">上一个</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">下一个</span>
+                </a>
+            </div>
+        </div>
+        #end
+
+        #if(option('calmlog_ex_article_click_show') != 'hidden')
+            #articles(orderBy="view_count DESC",hasThumbnail=true,count=java.lang.Integer::parseInt(option('calmlog_ex_article_click_size', 2)) < 1 ? 1 : (java.lang.Integer::parseInt(option('calmlog_ex_article_click_size', 2)) > 3 ? 3 : java.lang.Integer::parseInt(option('calmlog_ex_article_click_size', 2))), hiddenFlag=true)
+            <div class="recommend-bottom col-md-12 col-lg-12 col-xl-12 mb-2" style="order: #(option('calmlog_ex_article_click__seq') ?? 0)">
+            #for(article : articles)
+                <div class="recommend-item w-100 m-1">
+                    <a href="#(article.url)" title="#(article.title ??)" target="#(option('calmlog_ex_link_to_blank') && article.linkTo ? '_blank' : '_self')">
+                        <img src="#(article.thumbnail ?? 'img/default-img.png')" class="img-fluid" alt="">
+                    </a>
+                    <p class="recommend-item-bottom text-primary"><i class="fa fa-eye fa-fw"></i>#(article.viewCount) #(article.title)</p>
+                </div>
+            #end
+            </div>
+            #end
+        #end
+            
+        #if(option('calmlog_ex_product_click_show') != 'hidden')
+            #products(count = java.lang.Integer::parseInt(option('calmlog_ex_product_click_size', 2)) < 1 ? 1 : (java.lang.Integer::parseInt(option('calmlog_ex_product_click_size', 2)) > 3 ? 3 : java.lang.Integer::parseInt(option('calmlog_ex_product_click_size', 2))),hasThumbnail=true,orderBy="view_count DESC", hiddenFlag=true)
+            <div class="recommend-bottom col-md-12 col-lg-12 col-xl-12 mb-2" style="order: #(option('calmlog_ex_product_click_seq') ?? 0)">
+            #for(product : products)
+                <div class="recommend-item w-100 m-1">
+                    <a href="#(product.url)" title="#(product.title ??)">
+                        <img src="#(product.thumbnail ?? 'img/default-img.png')" class="img-fluid" alt="">
+                    </a>
+                    <p class="recommend-item-bottom text-primary"><i class="fa fa-eye fa-fw"></i>#(product.viewCount) #(product.title)</p>
+                </div>
+            #end
+            </div>
+            #end
+        #end
+        
+        #if(option('calmlog_ex_one_sentence_show') != 'hidden')
+        <div class="col-md-12 col-lg-12 col-xl-12" id="card-oneSentence" style="order: #(option('calmlog_ex_one_sentence_seq') ?? 0);position: relative">
+            <div id='oneSentenceImg' style='display:none'>
+               <canvas></canvas>
+            </div>
+            <div id="oneSentence" class="bg-light">
+                <div id="cursor"></div>
+                <div id="letters"></div>
+            </div>
+            <img id="oneSentence-image" class="img-thumbnail" style="position:absolute;left:17px;top:2px;cursor:pointer;width:36px;height:36px;display:none;z-index:20" alt='img'></img>
+            <h3><span id="oneSentence-change" class="badge badge-pill badge-success" style="position:absolute;right:17px;top:2px;cursor:pointer" title='下一条'><i class="fa fa-refresh"></i></span></h3>
+            <h3><span id="oneSentence-input" class="badge badge-pill badge-success" style="position:absolute;right:17px;bottom:10px;cursor:pointer" title='自己写'><i class="fa fa-keyboard-o"></i></span></h3>
+            <h3><span id="oneSentence-capture" class="badge badge-pill badge-danger" style="position:absolute;left:17px;bottom:10px;cursor:pointer" title='保存这些文字为图片吧'><i class="fa fa-camera"></i></span></h3>
+        </div>
+        <div class="input-group col-md-12 col-lg-12 col-xl-12 mb-3" style="display:none;order: #(option('calmlog_ex_one_sentence_seq') ?? 0)" id="input-sentence">
+            <textarea class="form-control" placeholder="请输入想说的话，可以输入中文，如果是英文，可以直接输入" 
+            rows='6' id="user-sentence" ></textarea>
+            <div class="input-group-prepend" id="sentenceWrite">
+              <span class="input-group-text text-success" style="cursor:pointer">
+                <i class="fa fa-pencil fa-lg"></i>
+                </span>
+            </div>
+        </div>
+        #end
+    </div>
+    
+    #set(topArticle={})
+    #articles(flag="top", count=5, hiddenFlag=true)
+    #for(article : articles)
+    #set(topArticle[''+article.id] = 'top')
+    <div class="cl-card pr">
+        <a class="card-link" href="#(article.url)" target="#(option('calmlog_ex_link_to_blank') && article.linkTo ? '_blank' : '_self')">
+        <div class="row">
+
+                <div class="col-lg-3 col-md-4 col-sm-12 cl-card-image">
+                    <img src="#(article.thumbnail ? article.thumbnail : (article.showImage ? article.showImage : 'img/default-img.png'))" class="img-fluid" alt="">
+                </div>
+
+                <div class="col-lg-9 col-md-8 col-sm-12 cl-card-main bg-light">
+                    <h3 class="cl-card-main-title">
+                        #(article.title)
+                    </h3>
+                    <p class="cl-card-main-info">#maxLength(article.text,100)</p>
+                    <p class="cl-card-more"><i class="fa fa-user fa-fw"></i>#(article.user.nickname ??) 发布于 #date(article.created ?? article.modified, "yyyy年MM月dd日 HH时")
+                    #articleCategories(article.getId(), 'category')
+                        &nbsp;|&nbsp;<i class="fa fa-bookmark fa-fw"></i>分类：
+                        #for(category: categories)
+                            #(category.title ??)
+                        #end
+                    #end
+                    #articleCategories(article.getId(), 'tag')
+                        &nbsp;|&nbsp;<i class="fa fa-tags fa-fw"></i>标签：
+                        #for(category: categories)
+                            #(category.title ??)
+                            #if(for.size != for.count)
+                                &nbsp;/&nbsp;
+                            #end
+                        #end
+                    #end
+                    </p>
+                </div>
+
+        </div>
+        </a>
+        <h3><span class="card-top-flag badge badge-success">置顶</span></h3>
+    </div>
+    #end
+    #end
+
+    #articlePageEx(pageSize=java.lang.Integer::parseInt(option('calmlog_ex_list_size', 15)), hiddenFlag=true)
+    #for(article : articlePageEx.list)
+    #if(!topArticle[''+article.id])
+    <div class="cl-card">
+        <a class="card-link" href="#(article.url)" target="#(option('calmlog_ex_link_to_blank') && article.linkTo ? '_blank' : '_self')">
+        <div class="row">
+
+                <div class="col-lg-3 col-md-4 col-sm-12 cl-card-image">
+                    <img src="#(article.thumbnail ? article.thumbnail : (article.showImage ? article.showImage : 'img/default-img.png'))" class="img-fluid" alt="">
+                </div>
+
+                <div class="col-lg-9 col-md-8 col-sm-12 cl-card-main bg-light">
+                    <h3 class="cl-card-main-title">
+                        #(article.title)
+                    </h3>
+                    <p class="cl-card-main-info">#maxLength(article.text,100)</p>
+                    <p class="cl-card-more"><i class="fa fa-user fa-fw"></i>#(article.user.nickname ??) 发布于 #date(article.created ?? article.modified, "yyyy年MM月dd日 HH时")
+                    #articleCategories(article.getId(), 'category')
+                        &nbsp;|&nbsp;<i class="fa fa-bookmark fa-fw"></i>分类：
+                        #for(category: categories)
+                            #(category.title ??)
+                        #end
+                    #end
+                    
+                    #articleCategories(article.getId(), 'tag')
+                        &nbsp;|&nbsp;<i class="fa fa-tags fa-fw"></i>标签：
+                        #for(category: categories)
+                            #(category.title ??)
+                            #if(for.size != for.count)
+                                &nbsp;/&nbsp;
+                            #end
+                        #end
+                    #end
+                    </p>
+                </div>
+
+        </div>
+        </a>
+
+    </div>
+    #end
+        #if(for.count==1 && option('whimurmur_list_ad_1' ??))
+            <div class="cl-card card-link">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 cl-card-main bg-light">
+                        <div class="list-1-ad" id="list-1-ad" style="margin-top: 0; padding: 0">
+                            <div class="list-1-ad-main pb-3">
+                                <div id="list-1-ad-content" class="m-1 ad-content">
+                                    #option("whimurmur_list_ad_1" ??)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        #else if(for.count==5 && option('whimurmur_list_ad_2' ??))
+            <div class="cl-card card-link">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 cl-card-main bg-light">
+                        <div class="list-2-ad bg-light" id="list-2-ad" style="margin-top: 0; padding: 0">
+                            <div class="list-2-ad-main pb-3">
+                                <div id="list-2-ad-content" class="m-1 ad-content">
+                                    #option("whimurmur_list_ad_2" ??)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        #else if(for.count==10 && option('whimurmur_list_ad_3' ??))
+            <div class="cl-card card-link">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 cl-card-main bg-light">
+                        <div class="list-3-ad bg-light" id="list-3-ad" style="margin-top: 0; padding: 0">
+                            <div class="list-3-ad-main pb-3">
+                                <div id="list-3-ad-content" class="m-1 ad-content">
+                                    #option("whimurmur_list_ad_3" ??)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        #end
+    #end
+
+    #articlePaginateEx()
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            #for(page : pages)
+            <li class="page-item #(page.style)"><a class="page-link" href="#(page.url ??)">#(page.text)</a></li>
+            #end
+        </ul>
+    </nav>
+    #end
+
+    #end
+
+</div>
+<div class="col-md-4 col-lg-4 col-xl-3 #(option('calmlog_ex_sidebar_position') == 'left' ? 'offset-mdn-8 offset-lgn-8 offset-xln-9 offset-smn-0 cl-left' : 'cl-right')">
+
+   #@sidebarContent()
+
+</div>
+
+#end

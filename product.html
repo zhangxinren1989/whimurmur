@@ -1,0 +1,115 @@
+#include("./layout.html")
+#@layout()
+
+#define script()
+<script src="/static/components/jquery/jquery.form.min.js"></script>
+<script src="/static/components/swiper/swiper.min.js"></script>
+<script src="/static/commons/product.js"></script>
+<script src="js/plugin/jquery/jquery.qrcode.min.js"></script>
+<script src="js/product-custom.js"></script>
+<script src="js/plugin/zoomify/zoomify.min.js"></script>
+#end
+
+#define css()
+<link href="/static/commons/product.css" rel="stylesheet">
+<link href="/static/components/swiper/swiper.min.css" rel="stylesheet">
+<link href="css/plugin/zoomify/zoomify.min.css" rel="stylesheet">
+#end
+
+#define content()
+
+<!---->
+<div class="product-top bg-light">
+
+    #@defaultProductHeader()
+
+</div>
+
+<!---->
+<div class="col-md-8 col-lg-8 col-xl-9 #(option('calmlog_ex_sidebar_position') == 'left' ? 'offset-md-4 offset-lg-4 offset-xl-3 cl-right' : 'cl-left')">
+    <div class="cl-artical-content bg-light">
+
+        <div class="cl-artical">
+            #(product.content)
+        </div>
+    </div>
+
+    <div id="comment">
+        #@defaultProductCommentPage()
+    </div>
+    
+    #if(option("calmlog_ex_content_ad" ??))
+    <div class="content-ad bg-light" id="content-ad">
+        <div class="content-ad-title">广告位-动动手帮助网站活下去</div>
+        <div class="content-ad-main pb-3">
+            <div id="content-tail-ad" class="m-1">
+                #option("calmlog_ex_content_ad" ??)
+            </div>
+        </div>
+    </div>
+    #end
+
+</div>
+
+<div class="col-md-4 col-lg-4 col-xl-3 #(option('calmlog_ex_sidebar_position') == 'left' ? 'offset-mdn-8 offset-lgn-8 offset-xln-9 offset-smn-0 cl-left' : 'cl-right')">
+    #if(option('calmlog_ex_shopper_contact_text'))
+    <div class="right-card bg-light">
+        
+        <div class="right-card-main">
+            <div class="right-card-title">联系商家</div>
+            <div class="cl-card-content">
+                <img src="#option('calmlog_ex_shopper_contact','img/default-img.png')" class="img-fluid" alt="">
+                <p class="text-center">#option('calmlog_ex_shopper_contact_text')</p>
+            </div>
+
+        </div>
+        
+    </div>
+    #end
+
+    #relevantProducts(product)
+    <div class="right-card bg-light">
+
+        <div class="right-card-main">
+           
+            <div class="right-card-title">相关推荐</div>
+
+            <ul class="product-recommended-list">
+                #for(product : relevantProducts)
+                <li>
+                    <a href="#(product.url)">
+                        <img src="#(product.thumbnail ? product.thumbnail : (product.showImage ? product.showImage : 'img/default-img.png'))" class="" alt="">
+                        <p class="recommended-title">#(product.title ??)</p>
+                    </a>
+                </li>
+                #end
+            </ul>
+           
+        </div>
+    </div>
+     #end
+    
+</div>
+<div id="productAppendix">
+    <div id="share">
+        <a class="" title="分享" data-toggle="tooltip"><img alt="" id="articleShareImg" src="img/icon/share.png" /></a>
+        <div id="shareDiv" class="hidden px-2 py-1" tabindex="9999">
+            <div class="pb-1">
+                <a target="_blank" href="http://shuo.douban.com/!service/share?href=#(C.request.scheme)://#(C.request.serverName)/#(java.net.URLEncoder::encode(product.url, 'utf-8'))&name=#(product.title)&text=#maxLength(product.text,120)&starid=0&aid=0&style=11"><img alt="duoban" src="img/icon/douban.png" /></a>
+                <a target="_blank" href="https://service.weibo.com/share/share.php?url=#(C.request.scheme)://#(C.request.serverName)/#(java.net.URLEncoder::encode(product.url, 'utf-8'))&title=#(product.title)"><img alt="weibo" src="img/icon/weibo.png" /></a>
+                <a target="_blank" href="http://www.linkedin.com/shareArticle?url=#(C.request.scheme)://#(C.request.serverName)/#(java.net.URLEncoder::encode(product.url, 'utf-8'))&title=#(product.title)&summary=#maxLength(product.text,120)&mini=true&ro=true&armin=armin"><img alt="linkin" src="img/icon/linkedin.png" /></a>
+                <a target="_blank" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=#(C.request.scheme)://#(C.request.serverName)/#(java.net.URLEncoder::encode(product.url, 'utf-8'))&title=#(product.title)&summary=#maxLength(product.text,120)"><img alt="qzone" src="img/icon/tencent_qzone.png" /></a>
+            </div>
+            <div>
+                <div id="wechatShareQr"></div>
+                <div class="text-center">扫码分享到微信</div>
+            </div>
+            
+        </div>
+    </div>
+    <div id="productPrePost">
+        <a id="productPost" #nextProduct() href="#(next.url)" title="#(next.title)" class="pointer" #end class="not-allowed" title="没有了" data-toggle="tooltip"><img alt="" src="img/icon/right_arrow2.png" /></a>
+        <a id="productPre" #previousProduct() href="#(previous.url)" title="#(previous.title)" class="pointer" #end class="not-allowed" title="没有了" data-toggle="tooltip"><img src="img/icon/left_arrow2.png" /></a>
+    </div>
+</div>
+#end

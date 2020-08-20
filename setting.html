@@ -1,0 +1,937 @@
+#@layout()
+
+#define script()
+<script src="/templates/whimurmur/js/setting-custom.js" type='text/javascript'></script>
+#end
+
+#define content()
+<div class="content-wrapper">
+
+    <section class="content-header">
+        <h1>
+            模板设置
+            <small>Template Setting</small>
+        </h1>
+    </section>
+
+    <section class="content">
+
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box box-primary">
+                    <div class="box-header ">
+                        <h3 class="box-title">模板设置说明</h3>
+                        <div style="border-left:5px solid #3c8dbc;margin-top: 10px;padding-left: 5px">
+                            <span>按enter键可以保存设置</span><br>
+                            <span>填图片路径的请事先保存图片到模板img文件夹下，路径填"img/**/xxxx"</span><br>
+                            <span>通知，文章脚注可以写多行（以enter换行），但只会显示第一行，方便切换</span><br>
+                            <span>文字中间可以使用html标签和样式，可以正常显示效果</span><br>
+                            <span>代码设置中可以自定义css, js, html标签，可以使用它们代替换原有的效果，或增加新的效果</span><br>
+                            <span>更多内容请查看：<a href='https://www.qingyu.blue/article/whimurmurHelpMain' target="_blank"><i class="fa fa-hand-o-right fa-fw"></i>模板帮助文档</a></span>
+                        </div>
+                    </div>
+
+                    <form class="form-horizontal form-setting" autocomplete="off"
+                          id="optionForm">
+                        <div class="box-body ">
+                            
+                            <ul id="setting-tab" class="nav nav-tabs">
+                                <li class="active">
+                                    <a href="#base" data-toggle="tab">基础设置</a>
+                                </li>
+                                <li>
+                                    <a href="#home-sidebar" data-toggle="tab">首页/侧边栏设置</a>
+                                </li>
+                                <li>
+                                    <a href="#article-product" data-toggle="tab">文章/产品设置</a>
+                                </li>
+                                <li>
+                                    <a href="#code" data-toggle="tab">代码设置</a>
+                                </li>
+                                <li>
+                                    <a href="#ad" data-toggle="tab">广告设置</a>
+                                </li>
+                            </ul>
+                            <div id="setting-tab-content" class="tab-content">
+                                <div class="tab-pane fade in active" id="base">
+                                    
+                                    <h4 class="page-header">页面设置</h4>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">logo设置</label>
+                                        <div class="col-sm-6">
+                                            <button type="button"
+                                                    for-src="calmlog_ex_logo"
+                                                    for-input="calmlog_ex_logo_input"
+                                                    class="btn-image-browser btn btn-flat btn-default btn-xs">
+                                                <i class="fa fa-fw fa-image"></i> 选择图片
+                                            </button>
+                                            <br/>
+                                            <img src="#(CPATH)#option('calmlog_ex_logo','/templates/whimurmur/img/logo.jpg')"
+                                                 id="calmlog_ex_logo">
+                                            <input type="hidden" id="calmlog_ex_logo_input" name="calmlog_ex_logo"
+                                                   value="#option('calmlog_ex_logo')">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">网站favicon设置</label>
+                                        <div class="col-sm-6">
+                                            <input type="input" class="form-control" placeholder="网站favicon路径..."
+                                                   name="calmlog_ex_favicon" value="#option('calmlog_ex_favicon')">
+                                            <p class="help-block">设置网站favicon.ico（网站图标）路径,如img/icon/favicon.ico，表示你将favicon.ico上传到模板img/icon目录下</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">页脚图片设置</label>
+                                        <div class="col-sm-6">
+                                            <textarea rows="10" class="form-control"
+                                                      placeholder="页脚图片地址..."
+                                                      name="calmlog_ex_footer_img">#option("calmlog_ex_footer_img")</textarea>
+                                            <p class="help-block"> 一行一条数据；图片地址|图片文字|链接；这里如果设置了图片的文字，点击会出现一条弹幕，然后3s后图片变改变，如果有链接，点击弹幕会转到链接</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">通知设置</label>
+                                        <div class="col-sm-6">
+                                            <textarea rows="10" class="form-control"
+                                                      placeholder="通知设置..."
+                                                      name="calmlog_ex_notice">#option("calmlog_ex_notice")</textarea>
+                                            <p class="help-block"> 设置网站通知信息</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">菜单颜色</label>
+                                        <div class="col-sm-6">
+                                            <textarea rows="10" class="form-control"
+                                                      placeholder="菜单颜色..."
+                                                      name="calmlog_ex_menu_highlight">#option("calmlog_ex_menu_highlight")</textarea>
+                                            <p class="help-block"> 一行一条数据；两部分：菜单名称，高亮颜色，以|分隔，如给商店菜单，一级菜单不同颜色显示</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">列表页大小</label>
+                                        <div class="col-sm-6">
+                                            <input type="input" class="form-control" placeholder="列表页大小..."
+                                                   name="calmlog_ex_list_size" value="#option('calmlog_ex_list_size')">
+                                            <p class="help-block">设置列表一页的数量，如15</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <h4 class="page-header">主题设置</h4>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">主题配色</label>
+                                        <div class="col-sm-6">
+                                            <select class="form-control" name="calmlog_ex_theme">
+                                                <option value="base" #selectedIf("base" == option("calmlog_ex_theme" ??))>基础</option>
+                                                <option value="blue_sky" #selectedIf("blue_sky" == option("calmlog_ex_theme" ??))>蓝色天空</option>
+                                                <option value="crisp" #selectedIf("crisp" == option("calmlog_ex_theme" ??))>艳丽</option>
+                                                <option value="darkly" #selectedIf("darkly" == option("calmlog_ex_theme" ??))>深色</option>
+                                                <option value="grey" #selectedIf("grey" == option("calmlog_ex_theme" ??))>灰色</option>
+                                                <option value="light_shadow" #selectedIf("light_shadow" == option("calmlog_ex_theme" ??))>浅色</option>
+                                                <option value="modern" #selectedIf("modern" == option("calmlog_ex_theme" ??))>现代</option>
+                                                <option value="orange" #selectedIf("orange" == option("calmlog_ex_theme" ??))>橘色</option>
+                                                <option value="purple" #selectedIf("purple" == option("calmlog_ex_theme" ??))>紫色</option>
+                                                <option value="square" #selectedIf("square" == option("calmlog_ex_theme" ??))>方正</option>
+                                                <option value="warm" #selectedIf("warm" == option("calmlog_ex_theme" ??))>春意</option>
+                                                <option value="dark_blue" #selectedIf("dark_blue" == option("calmlog_ex_theme" ??))>深蓝</option>
+                                            </select>
+                                            <p class="help-block">设置网站的主题（主题来自https://bootswatch.com/）</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">使用跟随主题颜色的背景</label>
+                                        <div class="col-sm-6">
+                                            <input type="checkbox" class="switchery" data-for="calmlog_ex_bg_follow_theme"
+                                                   #checkedIf(option("calmlog_ex_bg_follow_theme"))>
+                                            <input type="hidden" id="calmlog_ex_bg_follow_theme" name="calmlog_ex_bg_follow_theme">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">切换夜间主题开始时间</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control night-theme-time"
+                                                   name="calmlog_ex_night_theme_start" placeholder="开始时间" value="#option('calmlog_ex_night_theme_start' ??)">
+                                            <p class="help-block">选择切换到夜间模式的开始时间</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">切换夜间主题结束时间</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control night-theme-time"
+                                                   name="calmlog_ex_night_theme_end" placeholder="结束时间" value="#option('calmlog_ex_night_theme_end' ??)">
+                                            <p class="help-block">选择切换到夜间模式的结束时间</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">夜间主题</label>
+                                        <div class="col-sm-6">
+                                            <select class="form-control" name="calmlog_ex_night_theme">
+                                                <option value="darkly" #selectedIf("darkly" == option("calmlog_ex_night_theme" ??))>深色</option>
+                                                <option value="dark_blue" #selectedIf("dark_blue" == option("calmlog_ex_night_theme" ??))>深蓝</option>
+                                            </select>
+                                            <p class="help-block">设置网站的夜间主题，仅当夜间主题开始，结束时间，夜间主题同时存在时才生效（主题来自https://bootswatch.com/）</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <h4 class="page-header">live2d看板娘设置</h4>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">启用live2d看板娘</label>
+                                        <div class="col-sm-6">
+                                            <input type="checkbox" class="switchery" data-for="calmlog_ex_live2d"
+                                                   #checkedIf(option("calmlog_ex_live2d"))>
+                                            <input type="hidden" id="calmlog_ex_live2d" name="calmlog_ex_live2d">
+                                        </div>
+                                    </div>
+                                    
+                                    <h4 class="page-header">网站信息</h4>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">网站信息图片</label>
+                                        <div class="col-sm-6">
+                                            <button type="button"
+                                                    for-src="calmlog_ex_site_info_img"
+                                                    for-input="calmlog_ex_site_info_img_input"
+                                                    class="btn-image-browser btn btn-flat btn-default btn-xs">
+                                                <i class="fa fa-fw fa-image"></i> 选择图片
+                                            </button>
+                                            <br/>
+                                            <img src="#(CPATH)#option('calmlog_ex_site_info_img','/templates/whimurmur/img/default-img.png')"
+                                                 id="calmlog_ex_site_info_img">
+                                            <input type="hidden" id="calmlog_ex_site_info_img_input" name="calmlog_ex_site_info_img"
+                                                   value="#option('calmlog_ex_site_info_img')">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">网站起始时间</label>
+                                        <div class="col-sm-4">
+                                            <input type="input" class="form-control" placeholder="设置网站起始时间..."
+                                                   name="whimurmur_site_begin" value="#option('whimurmur_site_begin')">
+                                            <p class="help-block">网站起始时间，用于计算网站运行天数，如1日建立，到2日即2-1=1天，如果想变成2天请启用上面的按钮，格式：yyyy-mm-dd</p>
+                                        </div>
+                                        <label class="col-sm-2 control-label">加上第一天</label>
+                                        <div class="col-sm-2">
+                                            <input type="checkbox" class="switchery" data-for="whimurmur_site_begin_first"
+                                                   #checkedIf(option("whimurmur_site_begin_first"))>
+                                            <input type="hidden" id="whimurmur_site_begin_first" name="whimurmur_site_begin_first">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">网站系统</label>
+                                        <div class="col-sm-6">
+                                            <input type="input" class="form-control" placeholder="网站系统..."
+                                                   name="site_system" value="#option('site_system')">
+                                            <p class="help-block">网站所用系统，如jpress，格式：系统名|地址，可以没有地址</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">网站信息扩展</label>
+                                        <div class="col-sm-6">
+                                            <textarea rows="10" class="form-control"
+                                                      placeholder="网站扩展信息..."
+                                                      name="calmlog_ex_site_info">#option("calmlog_ex_site_info")</textarea>
+                                            <p class="help-block">一行一条数据；分两部分：扩展名称，扩展内容，以|分隔；如联系我|QQxxxxxxxxx，可以使用html代码，如加个链接</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">联系方式</label>
+                                        <div class="col-sm-6">
+                                            <button type="button"
+                                                    for-src="calmlog_ex_contact_me"
+                                                    for-input="calmlog_ex_contact_me_input"
+                                                    class="btn-image-browser btn btn-flat btn-default btn-xs">
+                                                <i class="fa fa-fw fa-image"></i> 选择图片
+                                            </button>
+                                            <br/>
+                                            <img src="#option('calmlog_ex_contact_me','/templates/whimurmur/img/default-img.png')"
+                                                 id="calmlog_ex_contact_me">
+                                            <input type="hidden" id="calmlog_ex_contact_me_input" name="calmlog_ex_contact_me"
+                                                   value="#option('calmlog_ex_contact_me')">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">联系方式说明</label>
+                                        <div class="col-sm-6">
+                                            <input type="input" class="form-control" placeholder="联系方式说明..."
+                                                   name="calmlog_ex_contact_text" value="#option('calmlog_ex_contact_text')">
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                
+                                <div class="tab-pane fade" id="home-sidebar">
+                                    
+                                    <h4 class="page-header">首页设置</h4>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">幻灯片设置</label>
+                                        <div class="col-sm-6">
+                                            <div class='row'>
+                                                <div class='col-sm-12 form-group'>
+                                                    <button type="button"
+                                                            for-src="calmlog_ex_slide_img"
+                                                            for-input="calmlog_ex_slide_img_input"
+                                                            class="btn-image-browser btn btn-flat btn-default btn-xs">
+                                                        <i class="fa fa-fw fa-image"></i> 选择幻灯片图片
+                                                    </button>
+                                                    <br/>
+                                                    <img src="/templates/whimurmur/img/default-img.png"
+                                                         id="calmlog_ex_slide_img">
+                                                    <input type="hidden" id="calmlog_ex_slide_img_input"
+                                                           value="">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-2">幻灯片地址</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="input" class="form-control" placeholder="幻灯片地址..."
+                                                               id="calmlog_ex_slide_url" value="">
+                                                    </div>                                                    
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-2">幻灯片标题</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="input" class="form-control" placeholder="幻灯片标题..."
+                                                               id="calmlog_ex_slide_title" value="">
+                                                    </div>      
+                                                    <p class="help-block">设置首页幻灯片的图片地址，幻灯片地址和幻灯片标题，图片地址必须有，可以没有幻灯片地址和幻灯片标题,如果地址以#b结尾，将在新窗口打开链接</p>
+                                                </div>
+                                                
+                                                <div class='form-group text-center'>
+                                                    <span type="button" class="btn btn-success" id='add-slide'><i class='fa fa-plus-square-o fa-fw'></i>增加</span>
+                                                </div>
+                                                <div class='form-group'>
+                                                    <div id='slide-added' class="">
+                                                    </div>
+                                                </div>
+                                                <input type="hidden" id="calmlog_ex_slides" name="calmlog_ex_slides"
+                                                   value="#option('calmlog_ex_slides')">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">页首显示设置</label>
+                                        <div class="col-sm-6">
+                                            <div class='row'>
+                                                <div class="col-sm-3">
+                                                    <label class='control-label'>幻灯片：</label>
+                                                    <div>
+                                                        <label class="radio-inline"><input value='show' type="radio" name="calmlog_ex_slide_show" #if(!option('calmlog_ex_slide_show') || option('calmlog_ex_slide_show') == 'show') checked='checked' #end>显示</label>
+                                                        <label class="radio-inline"><input value='hidden' type="radio" name="calmlog_ex_slide_show" #if(option('calmlog_ex_slide_show') == 'hidden') checked='checked' #end>隐藏</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class='row'>
+                                                <div class="col-sm-4">
+                                                    <label class='control-label'>最多查看文章：</label>
+                                                    <div>
+                                                        <label class="radio-inline"><input value='show' type="radio" name="calmlog_ex_article_click_show" #if(!option('calmlog_ex_article_click_show') || option('calmlog_ex_article_click_show') == 'show') checked='checked' #end>显示</label>
+                                                        <label class="radio-inline"><input value='hidden' type="radio" name="calmlog_ex_article_click_show" #if(option('calmlog_ex_article_click_show') == 'hidden') checked='checked' #end>隐藏</label>
+                                                    </div>
+                                                </div>
+                                                <div class='col-sm-4'>
+                                                    <label class='control-label'>显示顺序：</label>
+                                                    <input type="input" class="form-control" placeholder="最多查看文章显示顺序..." name="calmlog_ex_article_click__seq" value="#(option('calmlog_ex_article_click__seq') ?? 0)">
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <label class='control-label'>显示数量：</label>                                                    
+                                                    <input type="input" class="form-control" placeholder="显示数量..."
+                                                           name="calmlog_ex_article_click_size" value="#option('calmlog_ex_article_click_size', '1')">
+                                                </div>
+                                            </div>
+                                            
+                                            <div class='row'>
+                                                <div class="col-sm-4">
+                                                    <label class='control-label'>最多查看商品：</label>
+                                                    <div>
+                                                        <label class="radio-inline"><input value='show' type="radio" name="calmlog_ex_product_click_show" #if(!option('calmlog_ex_product_click_show') || option('calmlog_ex_product_click_show') == 'show') checked='checked' #end>显示</label>
+                                                        <label class="radio-inline"><input value='hidden' type="radio" name="calmlog_ex_product_click_show" #if(option('calmlog_ex_product_click_show') == 'hidden') checked='checked' #end>隐藏</label>
+                                                    </div>
+                                                </div>
+                                                <div class='col-sm-4'>
+                                                    <label class='control-label'>显示顺序：</label>
+                                                    <input type="input" class="form-control" placeholder="最多查看商品显示顺序..." name="calmlog_ex_product_click_seq" value="#(option('calmlog_ex_product_click_seq') ?? 0)">
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <label class='control-label'>显示数量：</label>
+                                                    <input type="input" class="form-control" placeholder="显示数量..."
+                                                           name="calmlog_ex_product_click_size" value="#option('calmlog_ex_product_click_size', '1')">
+                                                </div>
+                                            </div>
+                                            
+                                            <div class='row'>
+                                                <div class="col-sm-4">
+                                                    <label class='control-label'>精美句子：</label>
+                                                    <div>
+                                                        <label class="radio-inline"><input value='show' type="radio" name="calmlog_ex_one_sentence_show" #if(!option('calmlog_ex_one_sentence_show') || option('calmlog_ex_one_sentence_show') == 'show') checked='checked' #end>显示</label>
+                                                        <label class="radio-inline"><input value='hidden' type="radio" name="calmlog_ex_one_sentence_show" #if(option('calmlog_ex_one_sentence_show') == 'hidden') checked='checked' #end>隐藏</label>
+                                                    </div>
+                                                </div>
+                                                <div class='col-sm-4'>
+                                                    <label class='control-label'>显示顺序：</label>
+                                                    <input type="input" class="form-control" placeholder="精美句子显示顺序..." name="calmlog_ex_one_sentence_seq" value="#(option('calmlog_ex_one_sentence_seq') ?? 0)">
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <label class='control-label'>来源：</label>
+                                                    <div>
+                                                        <label class="radio-inline"><input value='random' type="radio" name="calmlog_ex_one_sentence_type" #if(!option('calmlog_ex_one_sentence_type') || option('calmlog_ex_one_sentence_type') == 'random') checked='checked' #end>随机</label>
+                                                        <label class="radio-inline"><input value='ylapiHitokoto' type="radio" name="calmlog_ex_one_sentence_type" #if(option('calmlog_ex_one_sentence_type') == 'ylapiHitokoto') checked='checked' #end>一言</label>
+                                                        <label class="radio-inline"><input value='alapiQinhua' type="radio" name="calmlog_ex_one_sentence_type" #if(option('calmlog_ex_one_sentence_type') == 'alapiQinhua') checked='checked' #end>土味情话</label>
+                                                        <label class="radio-inline"><input value='alapiDog' type="radio" name="calmlog_ex_one_sentence_type" #if(option('calmlog_ex_one_sentence_type') == 'alapiDog') checked='checked' #end>舔狗日记</label>
+                                                        <label class="radio-inline"><input value='alapiSoul' type="radio" name="calmlog_ex_one_sentence_type" #if(option('calmlog_ex_one_sentence_type') == 'alapiSoul') checked='checked' #end>心灵毒鸡汤</label>
+                                                    </div>
+                                                </div>
+                                                <div class='col-sm-4'>
+                                                    <label class='control-label'>精美句子图片：</label>
+                                                </div>
+                                                <div class='col-sm-4'>
+                                                    <label class='control-label'>一言图片：</label>
+                                                    <input type="input" class="form-control" placeholder="一言图片..." name="calmlog_ex_one_sentence_hitokoto_image" value="#(option('calmlog_ex_one_sentence_hitokoto_image') ??)">
+                                                </div>
+                                                <div class='col-sm-4'>
+                                                    <label class='control-label'>土味情话图片：</label>
+                                                    <input type="input" class="form-control" placeholder="土味情话图片..." name="calmlog_ex_one_sentence_qinghua_image" value="#(option('calmlog_ex_one_sentence_qinghua_image') ??)">
+                                                </div>
+                                                <div class='col-sm-4 col-sm-offset-4'>
+                                                    <label class='control-label'>舔狗日记图片：</label>
+                                                    <input type="input" class="form-control" placeholder="舔狗日记图片..." name="calmlog_ex_one_sentence_dog_image" value="#(option('calmlog_ex_one_sentence_dog_image') ??)">
+                                                </div>
+                                                <div class='col-sm-4'>
+                                                    <label class='control-label'>心灵毒鸡汤图片：</label>
+                                                    <input type="input" class="form-control" placeholder="心灵毒鸡汤图片..." name="calmlog_ex_one_sentence_soul_image" value="#(option('calmlog_ex_one_sentence_soul_image') ??)">
+                                                </div>
+                                                <div class='col-sm-4 col-sm-offset-4'>
+                                                    <label class='control-label'>自己写图片：</label>
+                                                    <input type="input" class="form-control" placeholder="自己写图片..." name="calmlog_ex_one_sentence_write_image" value="#(option('calmlog_ex_one_sentence_write_image') ??)">
+                                                </div>
+                                            </div>
+                                            <p class="help-block">设置首页幻灯片是否显示，最多查看文章、商品，每日一句（IE浏览器不支持每日一句）是否显示及显示顺序，顺序请填写大于等于0的数字，越小越在上，显示数量请填写1~3（大于3时显示3个，小于1时显示1个）,
+                                            一言图片如果不设置会展示默认图片</p>
+                                        </div>
+                                        
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">页面底部友情链接</label>
+                                        <div class="col-sm-6">
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <label class='control-label'>友情链接说明文字：</label>
+                                                    <input type="input" class="form-control" placeholder="友情链接说明文字" name="whimurmur_friendly_link_text" value="#(option('whimurmur_friendly_link_text') ??)">
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <label class='control-label'>友情链接网站：</label>
+                                                    <textarea rows="10" class="form-control"
+                                                          placeholder="友情链接网站..."
+                                                          name="whimurmur_friendly_link">#option("whimurmur_friendly_link")</textarea>
+                                                </div>
+                                            </div>
+                                            <p class="help-block">一行一条数据；分两部分：网站名称，网址，以|分隔；如晴雨|www.qingyu.blue</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <h4 class="page-header">侧边栏设置</h4>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">侧边栏位置</label>
+                                        <div class="col-sm-6">
+                                            <label class="radio-inline"><input value='right' type="radio" name="calmlog_ex_sidebar_position" #if(!option('calmlog_ex_sidebar_position') || option('calmlog_ex_sidebar_position') == 'right') checked='checked' #end>右侧</label>
+                                            <label class="radio-inline"><input value='left' type="radio" name="calmlog_ex_sidebar_position" #if(option('calmlog_ex_sidebar_position') == 'left') checked='checked' #end>左侧</label>
+                                            <p class="help-block">设置侧边栏的位置</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">侧边栏显示内容、顺序设置</label>
+                                        <div class="col-sm-6">
+                                            <div class='row'>
+                                                <div class="col-sm-3">
+                                                    <label class='control-label'>搜索卡片：</label>
+                                                    <div>
+                                                        <label class="radio-inline"><input value='show' type="radio" name="calmlog_ex_card_search" #if(!option('calmlog_ex_card_search') || option('calmlog_ex_card_search') == 'show') checked='checked' #end>显示</label>
+                                                        <label class="radio-inline"><input value='hidden' type="radio" name="calmlog_ex_card_search" #if(option('calmlog_ex_card_search') == 'hidden') checked='checked' #end>隐藏</label>
+                                                    </div>
+                                                </div>
+                                                <div class='col-sm-3'>
+                                                    <label class='control-label'>显示顺序：</label>
+                                                    <input type="input" class="form-control" placeholder="搜索卡片显示顺序..." name="calmlog_ex_card_search_seq" value="#(option('calmlog_ex_card_search_seq') ?? 0)">
+                                                </div>
+                                            </div>
+                                            
+                                            
+                                            <div class='row'>
+                                                <div class="col-sm-3">
+                                                    <label class='control-label'>每日热词卡片：</label>
+                                                    <div>
+                                                        <label class="radio-inline"><input value='show' type="radio" name="calmlog_ex_card_hotWord" #if(!option('calmlog_ex_card_hotWord') || option('calmlog_ex_card_hotWord') == 'show') checked='checked' #end>显示</label>
+                                                        <label class="radio-inline"><input value='hidden' type="radio" name="calmlog_ex_card_hotWord" #if(option('calmlog_ex_card_hotWord') == 'hidden') checked='checked' #end>隐藏</label>
+                                                    </div>
+                                                </div>
+                                                <div class='col-sm-3'>
+                                                    <label class='control-label'>显示顺序：</label>
+                                                    <input type="input" class="form-control" placeholder="每日热词卡片显示顺序..." name="calmlog_ex_card_hotWord_seq" value="#(option('calmlog_ex_card_hotWord_seq') ?? 0)">
+                                                </div>
+                                            </div>
+                                            
+                                            <div class='row'>
+                                                <div class="col-sm-3">
+                                                    <label class='control-label'>文章卡片：</label>
+                                                    <div>
+                                                        <label class="radio-inline"><input value='show' type="radio" name="calmlog_ex_card_article" #if(!option('calmlog_ex_card_article') || option('calmlog_ex_card_article') == 'show') checked='checked' #end>显示</label>
+                                                        <label class="radio-inline"><input value='hidden' type="radio" name="calmlog_ex_card_article" #if(option('calmlog_ex_card_article') == 'hidden') checked='checked' #end>隐藏</label>
+                                                    </div>
+                                                </div>
+                                                <div class='col-sm-3'>
+                                                    <label class='control-label'>显示顺序：</label>
+                                                    <input type="input" class="form-control" placeholder="文章卡片显示顺序..." name="calmlog_ex_card_article_seq" value="#(option('calmlog_ex_card_article_seq') ?? 0)">
+                                                </div>
+                                            </div>
+                                            
+                                            <div class='row'>
+                                                <div class="col-sm-3">
+                                                    <label class='control-label'>广告位-1</label>
+                                                    <div>
+                                                        <label class="radio-inline"><input value='show' type="radio" name="calmlog_ex_card_side_ad_1" #if(!option('calmlog_ex_card_side_ad_1') || option('calmlog_ex_card_side_ad_1') == 'show') checked='checked' #end>显示</label>
+                                                        <label class="radio-inline"><input value='hidden' type="radio" name="calmlog_ex_card_side_ad_1" #if(option('calmlog_ex_card_side_ad_1') == 'hidden') checked='checked' #end>隐藏</label>
+                                                    </div>
+                                                </div>
+                                                <div class='col-sm-3'>
+                                                    <label class='control-label'>显示顺序：</label>
+                                                    <input type="input" class="form-control" placeholder="广告位-1显示顺序..." name="calmlog_ex_card_side_ad_1_seq" value="#(option('calmlog_ex_card_side_ad_1_seq') ?? 0)">
+                                                </div>
+                                            </div>
+                                            
+                                            <div class='row'>
+                                                <div class="col-sm-3">
+                                                    <label class='control-label'>标签卡片</label>
+                                                    <div>
+                                                        <label class="radio-inline"><input value='show' type="radio" name="calmlog_ex_card_tag" #if(!option('calmlog_ex_card_tag') || option('calmlog_ex_card_tag') == 'show') checked='checked' #end>显示</label>
+                                                        <label class="radio-inline"><input value='hidden' type="radio" name="calmlog_ex_card_tag" #if(option('calmlog_ex_card_tag') == 'hidden') checked='checked' #end>隐藏</label>
+                                                    </div>
+                                                </div>
+                                                <div class='col-sm-3'>
+                                                    <label class='control-label'>显示顺序：</label>
+                                                    <input type="input" class="form-control" placeholder="标签卡片显示顺序..." name="calmlog_ex_card_tag_seq" value="#(option('calmlog_ex_card_tag_seq') ?? 0)">
+                                                </div>
+                                            </div>
+                                            
+                                            <div class='row'>
+                                                <div class="col-sm-3">
+                                                    <label class='control-label'>原创文章时间线卡片</label>
+                                                    <div>
+                                                        <label class="radio-inline"><input value='show' type="radio" name="calmlog_ex_card_self_archive" #if(!option('calmlog_ex_card_self_archive') || option('calmlog_ex_card_self_archive') == 'show') checked='checked' #end>显示</label>
+                                                        <label class="radio-inline"><input value='hidden' type="radio" name="calmlog_ex_card_self_archive" #if(option('calmlog_ex_card_self_archive') == 'hidden') checked='checked' #end>隐藏</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <label class='control-label'>转载文章时间线卡片</label>
+                                                    <div>
+                                                        <label class="radio-inline"><input value='show' type="radio" name="calmlog_ex_card_reprint_archive" #if(!option('calmlog_ex_card_reprint_archive') || option('calmlog_ex_card_reprint_archive') == 'show') checked='checked' #end>显示</label>
+                                                        <label class="radio-inline"><input value='hidden' type="radio" name="calmlog_ex_card_reprint_archive" #if(option('calmlog_ex_card_reprint_archive') == 'hidden') checked='checked' #end>隐藏</label>
+                                                    </div>
+                                                </div>
+                                                <div class='col-sm-3'>
+                                                    <label class='control-label'>显示顺序：</label>
+                                                    <input type="input" class="form-control" placeholder="文章时间线卡片显示顺序..." name="calmlog_ex_card_archive_seq" value="#(option('calmlog_ex_card_archive_seq') ?? 0)">
+                                                </div>
+                                            </div>
+                                            
+                                            <div class='row'>
+                                                <div class="col-sm-3">
+                                                    <label class='control-label'>产品卡片</label>
+                                                    <div>
+                                                        <label class="radio-inline"><input value='show' type="radio" name="calmlog_ex_card_product" #if(!option('calmlog_ex_card_product') || option('calmlog_ex_card_product') == 'show') checked='checked' #end>显示</label>
+                                                        <label class="radio-inline"><input value='hidden' type="radio" name="calmlog_ex_card_product" #if(option('calmlog_ex_card_product') == 'hidden') checked='checked' #end>隐藏</label>
+                                                    </div>
+                                                </div>
+                                                <div class='col-sm-3'>
+                                                    <label class='control-label'>显示顺序：</label>
+                                                    <input type="input" class="form-control" placeholder="产品卡片显示顺序..." name="calmlog_ex_card_product_seq" value="#(option('calmlog_ex_card_product_seq') ?? 0)">
+                                                </div>
+                                            </div>
+                                            
+                                            <div class='row'>
+                                                <div class="col-sm-3">
+                                                    <label class='control-label'>网站信息卡片</label>
+                                                    <div>
+                                                        <label class="radio-inline"><input value='show' type="radio" name="calmlog_ex_card_site_info" #if(!option('calmlog_ex_card_site_info') || option('calmlog_ex_card_site_info') == 'show') checked='checked' #end>显示</label>
+                                                        <label class="radio-inline"><input value='hidden' type="radio" name="calmlog_ex_card_site_info" #if(option('calmlog_ex_card_site_info') == 'hidden') checked='checked' #end>隐藏</label>
+                                                    </div>
+                                                </div>
+                                                <div class='col-sm-3'>
+                                                    <label class='control-label'>显示顺序：</label>
+                                                    <input type="input" class="form-control" placeholder="网站信息显示顺序..." name="calmlog_ex_card_site_info_seq" value="#(option('calmlog_ex_card_site_info_seq') ?? 0)">
+                                                </div>
+                                            </div>
+                                            
+                                            <div class='row'>
+                                                <div class="col-sm-3">
+                                                    <label class='control-label'>联系方式卡片</label>
+                                                    <div>
+                                                        <label class="radio-inline"><input value='show' type="radio" name="calmlog_ex_card_contact" #if(!option('calmlog_ex_card_contact') || option('calmlog_ex_card_contact') == 'show') checked='checked' #end>显示</label>
+                                                        <label class="radio-inline"><input value='hidden' type="radio" name="calmlog_ex_card_contact" #if(option('calmlog_ex_card_contact') == 'hidden') checked='checked' #end>隐藏</label>
+                                                    </div>
+                                                </div>
+                                                <div class='col-sm-3'>
+                                                    <label class='control-label'>显示顺序：</label>
+                                                    <input type="input" class="form-control" placeholder="联系方式卡片显示顺序..." name="calmlog_ex_card_contact_seq" value="#(option('calmlog_ex_card_contact_seq') ?? 0)">
+                                                </div>
+                                            </div>
+                                            
+                                            <div class='row'>
+                                                <div class="col-sm-3">
+                                                    <label class='control-label'>广告栏-2</label>
+                                                    <div>
+                                                        <label class="radio-inline"><input value='show' type="radio" name="calmlog_ex_card_side_ad_2" #if(!option('calmlog_ex_card_side_ad_2') || option('calmlog_ex_card_side_ad_2') == 'show') checked='checked' #end>显示</label>
+                                                        <label class="radio-inline"><input value='hidden' type="radio" name="calmlog_ex_card_side_ad_2" #if(option('calmlog_ex_card_side_ad_2') == 'hidden') checked='checked' #end>隐藏</label>
+                                                    </div>
+                                                </div>
+                                                <div class='col-sm-3'>
+                                                    <label class='control-label'>显示顺序：</label>
+                                                    <input type="input" class="form-control" placeholder="广告栏-2显示顺序..." name="calmlog_ex_card_side_ad_2_seq" value="#(option('calmlog_ex_card_side_ad_2_seq') ?? 0)">
+                                                </div>
+                                            </div>
+                                            <p class="help-block">设置侧边栏显示内容及显示顺序,顺序请输入大于等于0的数字，数字越小越在前（默认为0）</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">启用文章标签云</label>
+                                        <div class="col-sm-6">
+                                            <input type="checkbox" class="switchery" data-for="calmlog_ex_article-tag-cloud"
+                                                   #checkedIf(option("calmlog_ex_article-tag-cloud"))>
+                                            <input type="hidden" id="calmlog_ex_article-tag-cloud" name="calmlog_ex_article-tag-cloud">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">启用产品标签云</label>
+                                        <div class="col-sm-6">
+                                            <input type="checkbox" class="switchery" data-for="calmlog_ex_product-tag-cloud"
+                                                   #checkedIf(option("calmlog_ex_product-tag-cloud"))>
+                                            <input type="hidden" id="calmlog_ex_product-tag-cloud" name="calmlog_ex_product-tag-cloud">
+                                        </div>
+                                    </div>
+                            
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">站外搜索1</label>
+                                        <div class="col-sm-6">
+                                            <input type="input" class="form-control" placeholder="站外搜索1..."
+                                                   name="calmlog_ex_external_search_1" value="#option('calmlog_ex_external_search_1')">
+                                            <p class="help-block">设置搜索中的站外搜索1，格式：名称|地址，如百度|baidu.com?wd=web_name</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">站外搜索2</label>
+                                        <div class="col-sm-6">
+                                            <input type="input" class="form-control" placeholder="站外搜索2..."
+                                                   name="calmlog_ex_external_search_2" value="#option('calmlog_ex_external_search_2')">
+                                            <p class="help-block">设置搜索中的站外搜索2，格式：名称|地址，如知网|cnki.net</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">文章列表中间图片1</label>
+                                        <div class="col-sm-6">
+                                            <input type="input" class="form-control" placeholder="文章列表中间图片1..."
+                                                   name="calmlog_ex_article_img_1" value="#option('calmlog_ex_article_img_1')">
+                                            <p class="help-block">设置文章列表中间图片地址，可以使用随机图片地址，如https://api.ixiaowai.cn/api/api.php</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">文章列表中间图片2</label>
+                                        <div class="col-sm-6">
+                                            <input type="input" class="form-control" placeholder="文章列表中间图片2..."
+                                                   name="calmlog_ex_article_img_2" value="#option('calmlog_ex_article_img_2')">
+                                            <p class="help-block">设置文章列表中间图片地址，可以使用随机图片地址，如https://api.ixiaowai.cn/api/api.php</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">产品列表中间图片1</label>
+                                        <div class="col-sm-6">
+                                            <input type="input" class="form-control" placeholder="产品列表中间图片1..."
+                                                   name="calmlog_ex_product_img_1" value="#option('calmlog_ex_product_img_1')">
+                                            <p class="help-block">设置产品列表中间图片地址，可以使用随机图片地址，如https://api.ooopn.com/image/bing/api.php?v=2&type=jump</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">产品列表中间图片2</label>
+                                        <div class="col-sm-6">
+                                            <input type="input" class="form-control" placeholder="产品列表中间图片2..."
+                                                   name="calmlog_ex_product_img_2" value="#option('calmlog_ex_product_img_2')">
+                                            <p class="help-block">设置产品列表中间图片地址，可以使用随机图片地址，如https://api.ixiaowai.cn/gqapi/gqapi.php</p>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                
+                                <div class="tab-pane fade" id="article-product">
+                                    
+                                    <h4 class="page-header">文章设置</h4>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">文章脚注</label>
+                                        <div class="col-sm-6">
+                                            <textarea rows="5" class="form-control"
+                                                      placeholder="文章脚注..."
+                                                      name="calmlog_ex_endnote">#option("calmlog_ex_endnote")</textarea>
+                                            <p class="help-block">文章的脚注，如我是一只笔耕不辍的小鸟</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">新窗口打开外链</label>
+                                        <div class="col-sm-6">
+                                            <input type="checkbox" class="switchery" data-for="calmlog_ex_link_to_blank"
+                                                   #checkedIf(option("calmlog_ex_link_to_blank"))>
+                                            <input type="hidden" id="calmlog_ex_link_to_blank" name="calmlog_ex_link_to_blank">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">打赏二维码</label>
+                                        <div class="col-sm-4">
+                                            <input type="input" class="form-control" placeholder="微信二维码路径..."
+                                                   name="calmlog_ex_donate_wechat" value="#option('calmlog_ex_donate_wechat' ??)">
+                                            <p class="help-block">微信二维码路径</p>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <input type="input" class="form-control" placeholder="支付宝二维码路径..."
+                                                   name="calmlog_ex_donate_alipay" value="#option('calmlog_ex_donate_alipay' ??)">
+                                            <p class="help-block">支付宝二维码路径</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <h4 class="page-header">商品设置</h4>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">商家联系方式</label>
+                                        <div class="col-sm-6">
+                                            <button type="button"
+                                                    for-src="calmlog_ex_shopper_contact"
+                                                    for-input="calmlog_ex_shopper_contact_input"
+                                                    class="btn-image-browser btn btn-flat btn-default btn-xs">
+                                                <i class="fa fa-fw fa-image"></i> 选择图片
+                                            </button>
+                                            <br/>
+                                            <img src="#option('calmlog_ex_shopper_contact','/templates/whimurmur/img/default-img.png')"
+                                                 id="calmlog_ex_shopper_contact">
+                                            <input type="hidden" id="calmlog_ex_shopper_contact_input" name="calmlog_ex_shopper_contact"
+                                                   value="#option('calmlog_ex_shopper_contact')">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">商家联系方式说明</label>
+                                        <div class="col-sm-6">
+                                            <input type="input" class="form-control" placeholder="商家联系方式说明..."
+                                                   name="calmlog_ex_shopper_contact_text" value="#option('calmlog_ex_shopper_contact_text')">
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                
+                                <div class="tab-pane fade" id="code">
+                                    
+                                    <h4 class="page-header">自定义html代码</h4>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">head中html代码</label>
+                                        <div class="col-sm-6">
+                                            <textarea rows="10" class="form-control"
+                                                      placeholder="head中html代码..."
+                                                      name="calmlog_ex_custom_head_html">#option("calmlog_ex_custom_head_html")</textarea>
+                                            <p class="help-block">设置head中自定义的html代码，要符合格式，使用标签包裹起来，如设置meta信息</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">body结束html代码</label>
+                                        <div class="col-sm-6">
+                                            <textarea rows="10" class="form-control"
+                                                      placeholder="body中html代码..."
+                                                      name="calmlog_ex_custom_body_html">#option("calmlog_ex_custom_body_html")</textarea>
+                                            <p class="help-block">设置body中自定义的html代码，要符合格式，使用标签包裹起来，如设置一个固定位置的返回顶部按钮</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <h4 class="page-header">自定义css代码</h4>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">head中css代码</label>
+                                        <div class="col-sm-6">
+                                            <textarea rows="10" class="form-control"
+                                                      placeholder="head中css代码..."
+                                                      name="calmlog_ex_custom_css">#option("calmlog_ex_custom_css")</textarea>
+                                            <p class="help-block">设置自定义的css代码，要符合格式，使用style标签包裹起来，如设置随机背景图片（地址：https://api.ixiaowai.cn/mcapi/mcapi.php），鼠标样式</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <h4 class="page-header">自定义js代码</h4>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">head结束js代码</label>
+                                        <div class="col-sm-6">
+                                            <textarea rows="10" class="form-control"
+                                                      placeholder="head结束js代码..."
+                                                      name="calmlog_ex_custom_head_js">#option("calmlog_ex_custom_head_js")</textarea>
+                                            <p class="help-block">设置自定义的js代码，要符合格式，使用script标签包裹起来，
+                                            如设置统计代码</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">body开始js代码</label>
+                                        <div class="col-sm-6">
+                                            <textarea rows="10" class="form-control"
+                                                      placeholder="body开始js代码..."
+                                                      name="calmlog_ex_custom_pre_js">#option("calmlog_ex_custom_pre_js")</textarea>
+                                            <p class="help-block">设置自定义的js代码，要符合格式，使用script标签包裹起来，
+                                            如设置鼠标点击效果</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">body结束js代码</label>
+                                        <div class="col-sm-6">
+                                            <textarea rows="10" class="form-control"
+                                                      placeholder="body结束js代码..."
+                                                      name="calmlog_ex_custom_after_js">#option("calmlog_ex_custom_after_js")</textarea>
+                                            <p class="help-block">设置自定义的js代码，要符合格式，使用script标签包裹起来，
+                                            这里设置不影响加载页面内容，而且这里的js最后执行，覆盖掉原先的效果，可以用来改变原有的效果</p>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                
+                                <div class="tab-pane fade" id="ad">
+                                
+                                    <h4 class="page-header">首页顶部广告代码</h4>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">首页顶部广告代码</label>
+                                        <div class="col-sm-6">
+                                            <textarea rows="10" class="form-control"
+                                                      placeholder="首页顶部广告代码..."
+                                                      name="whimurmur_index_top_ad">#option("whimurmur_index_top_ad")</textarea>
+                                            <p class="help-block">首页顶部广告代码，在首页顶部显示</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <h4 class="page-header">列表广告代码1</h4>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">列表广告代码1</label>
+                                        <div class="col-sm-6">
+                                            <textarea rows="10" class="form-control"
+                                                      placeholder="列表广告代码1..."
+                                                      name="whimurmur_list_ad_1">#option("whimurmur_list_ad_1")</textarea>
+                                            <p class="help-block">内容列表广告</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <h4 class="page-header">列表广告代码2</h4>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">列表广告代码2</label>
+                                        <div class="col-sm-6">
+                                            <textarea rows="10" class="form-control"
+                                                      placeholder="列表广告代码2..."
+                                                      name="whimurmur_list_ad_2">#option("whimurmur_list_ad_2")</textarea>
+                                            <p class="help-block">内容列表第二条广告，列表count>=5时显示</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <h4 class="page-header">列表广告代码3</h4>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">列表广告代码3</label>
+                                        <div class="col-sm-6">
+                                            <textarea rows="10" class="form-control"
+                                                      placeholder="列表广告代码3..."
+                                                      name="whimurmur_list_ad_3">#option("whimurmur_list_ad_3")</textarea>
+                                            <p class="help-block">内容列表第三条广告，列表count>=10时显示</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <h4 class="page-header">内容页广告代码</h4>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">内容页广告代码</label>
+                                        <div class="col-sm-6">
+                                            <textarea rows="10" class="form-control"
+                                                      placeholder="内容页广告代码..."
+                                                      name="calmlog_ex_content_ad">#option("calmlog_ex_content_ad")</textarea>
+                                            <p class="help-block">内容页广告位代码内容，内容页广告位在内容页最后添加</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <h4 class="page-header">侧边栏广告代码1</h4>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">侧边栏广告代码1</label>
+                                        <div class="col-sm-6">
+                                            <textarea rows="10" class="form-control"
+                                                      placeholder="侧边栏广告代码..."
+                                                      name="calmlog_ex_side_ad_1">#option("calmlog_ex_side_ad_1")</textarea>
+                                            <p class="help-block">侧边栏广告位1代码内容，在侧栏中间添加</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <h4 class="page-header">侧边栏广告代码2</h4>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">侧边栏广告代码2</label>
+                                        <div class="col-sm-6">
+                                            <textarea rows="10" class="form-control"
+                                                      placeholder="侧边栏广告代码..."
+                                                      name="calmlog_ex_side_ad_2">#option("calmlog_ex_side_ad_2")</textarea>
+                                            <p class="help-block">侧边栏广告位2代码内容，在侧栏最后添加</p>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                            
+                        </div>
+
+                        <div class="box-footer">
+                            <div class="col-sm-offset-2 col-sm-10 submit-block">
+                                <div class="box-submit">
+                                    <button type="submit" class="btn btn-primary">提交</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+</div>
+#end
