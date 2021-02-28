@@ -1,0 +1,28 @@
+#footImg{
+    position: relative;
+    height: 3em;
+    width: 144px;
+    display:inline-block;
+    vertical-align:middle;
+}
+.footer-img-a{
+    position: absolute;
+    top:0;
+    left:0;
+}
+.footer-img-img{
+    max-height:2.5em;
+}
+#footImg .footer-img-a-hidden{
+    position: absolute; 
+    display: none;
+    top:0;
+    left:0;
+    max-height:40px;
+}
+.friendly-link-seperate{
+    font-size: 1.5rem;
+}
+.footer-friendly-link{
+    margin-bottom: 0.5rem;
+}

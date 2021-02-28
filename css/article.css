@@ -1,0 +1,57 @@
+/* article.html */
+
+/* end article.html */
+
+/* artsearch.html */
+
+/* end artsearch.html */
+
+/* artlist.html article_reprint.html */
+#page-border{
+    position:absolute;
+    right:0;
+    top:0;
+    width:8px;
+}
+#article-author-support{
+    background-color:rgba(0,0,0,0);
+    font-size:0;
+    padding: 20px;
+    margin-top: 20px;
+}
+#thumbUp,#reward{
+    font-weight: bold;
+    font-size: 16px;
+    line-height:45px;
+    cursor:pointer;
+    user-select:none;
+}
+#donate-money{
+    position:absolute;
+    top:-175px;
+    display:none;
+    width:290px;
+}
+.reward-scan{
+    width:145px;
+    display:inline-block;
+    background-color:#fff;
+}
+.wechat-scan{
+    width:145px;
+    display:inline-block;
+    font-size: 16px;
+    color:#1AAD19;
+}
+.alipay-scan{
+    width:145px;
+    display:inline-block;
+    font-size: 16px;
+    color:#1677FF;
+}
+.reward-img{
+    display:inline-block;
+    width:145px;
+    height:145px;
+}
+/* end artlist.html article_reprint.html */

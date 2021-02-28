@@ -1,0 +1,32 @@
+#oneSentence-image{
+    position:absolute;
+    left:17px;
+    top:2px;
+    cursor:pointer;
+    width:36px;
+    height:36px;
+    display:none;
+    z-index:20;
+}
+#oneSentence-change{
+    position:absolute;
+    right:17px;
+    top:2px;
+    cursor:pointer;
+}
+#oneSentence-input{
+    position:absolute;
+    right:17px;
+    bottom:10px;
+    cursor:pointer;
+}
+#oneSentence-capture{
+    position:absolute;
+    left:17px;
+    bottom:10px;
+    cursor:pointer;
+}
+#input-sentence{
+    display:none;
+    height:0;
+}

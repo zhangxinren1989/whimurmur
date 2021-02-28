@@ -1,0 +1,42 @@
+/* 目录固定位置，超过最大高度出现滚动条 */
+#help-document{
+    overflow: auto;
+    /*position: fixed;
+    max-width: 22%;*/
+}
+@media (min-width: 1px){
+    #help-document{
+        position: static;
+        max-width: 100%;
+    }
+}
+@media (min-width: 768px){
+    #help-document{
+        position: fixed;
+        width: 182px;
+    }
+}
+@media (min-width: 992px){
+    #help-document{
+        position: fixed;
+        width: 236px;
+    }
+}
+@media (min-width: 1200px){
+    #help-document{
+        position: fixed;
+        width: 285px;
+    }
+}
+@media (min-width: 1440px){
+     #help-document{
+        position: fixed;
+        width: 342px;
+    }
+}
+@media (min-width: 1728px){
+     #help-document{
+        position: fixed;
+        width: 410px;
+    }
+}

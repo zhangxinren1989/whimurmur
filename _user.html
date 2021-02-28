@@ -1,0 +1,26 @@
+#define user()
+    <div class="right-card-main hidden" id='userInfo'>
+        <div class="right-card-title">欢迎你，<span id='nickname'></span></div>
+        <div class="cl-card-content">
+            <img id='avatar' class="img-thumbnail w-100" alt="">
+            <div class="btn-group-vertical btn-block">
+              <a href="/ucenter" class="btn btn-primary btn-sm" aria-hidden="true"><i class="oi oi-person"></i> 个人中心</a>
+              <a href="#(CPATH)/ucenter/article/write" class="btn btn-primary btn-sm" aria-hidden="true"><i class="oi oi-pencil"></i> 投稿</a>
+              <a href="#" onclick="window.location.href='/ucenter/doLogout?csrf_token='+$.cookie()['csrf_token']" 
+                class="btn btn-primary btn-sm" aria-hidden="true"><i class="oi oi-account-logout"></i> 退出</a>
+                <!-- 无法退出，强退，以后再看 -->
+            </div>
+        </div>
+    </div>
+    
+    <div class="right-card-main" id='logInfo'>
+        <div class="right-card-title">注册登陆</div>
+        <div class="cl-card-content text-center">
+            <img src="img/avatar.png" class="rounded w-100" alt="">
+            <p>
+              <a href="/user/login" class="btn btn-primary btn-sm m-1" aria-hidden="true"><i class="oi oi-account-login"></i> 登陆</a>
+              <a href="/user/register" class="btn btn-primary btn-sm m-1" aria-hidden="true" ><i class="oi oi-people"></i> 注册</a>
+            </p>
+        </div>
+    </div>
+#end

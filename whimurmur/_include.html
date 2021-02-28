@@ -1,0 +1,218 @@
+#define initIncludeJsHeader()
+<script>
+    // 页面模板路径
+    tPath = '#(C.request.contextPath)' + '#(TPATH)' + '/';
+    contextPath = '#(C.request.contextPath)/';
+    csrf = '#(CSRF_TOKEN)';
+    webName = '#(WEB_NAME ??)';
+    userAvatar = tPath + 'img/avatar.png';
+    userName = null;
+    bgFollowTheme = #(option('whimurmur_bg_follow_theme') ?? false);
+    oneSentenceType = '#(option('whimurmur_one_sentence_type') ?? 'yyapi')';
+    var oneSentencesource = {
+        alapiDog: ['https://v1.alapi.cn/api/dog?format=json','舔狗日记', "#option('whimurmur_one_sentence_dog_image', 'img/oneSentence/oneSentenceDog.png')"],
+        alapiQinhua: ['https://v1.alapi.cn/api/qinghua?format=json','土味情话', "#option('whimurmur_one_sentence_qinghua_image', 'img/oneSentence/oneSentenceQinHua.png')"],
+        alapiSoul: ['https://v1.alapi.cn/api/soul?format=json','心灵毒鸡汤', "#option('whimurmur_one_sentence_hitokoto_image', 'img/oneSentence/oneSentenceSoul.png')"],
+        ylapiHitokoto: ['https://v1.hitokoto.cn/?encode=json','一言', "#option('whimurmur_one_sentence_soul_image', 'img/oneSentence/oneSentenceHitokoto.png')"],
+        writeImage: "#option('whimurmur_one_sentence_write_image', 'img/oneSentence/oneSentenceWrite.png')"
+    }
+    
+    if(!$.cookie()["curTheme"]){
+        #if(option("whimurmur_night_theme_start") && option("whimurmur_night_theme_end") && option("whimurmur_night_theme"))
+            #set(nightStart=java.time.LocalTime::parse(option("whimurmur_night_theme_start"), java.time.format.DateTimeFormatter::ofPattern("HH:mm")))
+            #set(nightEnd=java.time.LocalTime::parse(option("whimurmur_night_theme_end"), java.time.format.DateTimeFormatter::ofPattern("HH:mm")))
+            #set(now=java.time.LocalTime::now())
+            #set(startMinute=nightStart.getHour() * 60 + nightStart.getMinute())
+            #set(endMinute=nightEnd.getHour() * 60 + nightEnd.getMinute())
+            #set(nowMinute=now.getHour() * 60 + now.getMinute())
+            
+            #if(startMinute < endMinute && startMinute <= nowMinute && endMinute >= nowMinute)
+                $.cookie("curTheme", "#option('whimurmur_night_theme')", {path: "/"});
+            #else if(startMinute >= endMinute && startMinute <= nowMinute || endMinute >= nowMinute)
+                $.cookie("curTheme", "#option('whimurmur_night_theme')", {path: "/"});
+            #else
+                // 设置path很重要，否则只对当前路径及子路径有效
+                $.cookie("curTheme", $("#theme-css").attr("name"), {path: "/"});
+            #end
+        #else
+            // 设置path很重要，否则只对当前路径及子路径有效
+            $.cookie("curTheme", $("#theme-css").attr("name"), {path: "/"});
+        #end
+    }
+    
+    //$("#theme-css").attr("href", "/templates/whimurmur/bootstrap/css/theme/bootstrap." + $.cookie()["curTheme"] + ".min.css");
+    document.write("<link id='link-" + $.cookie()['curTheme'] + "' href='" + tPath + "bootstrap/css/theme/bootstrap." + $.cookie()['curTheme'] + ".min.css' rel='stylesheet'>");
+    // whimurmur.css是自定义的css，可能会修改bootstrap的css，所以在bootstrap.css的后面使用
+    document.write("<link href='#(T_PATH)/css/whimurmur.css' rel='stylesheet'>");
+</script>
+#end
+
+#define initIncludeJsBody()
+<script>
+    if($("body").css("background-image")){
+        $.cookie("body-background-image", $("body").css("background-image"), {path: "/"});
+    }else{
+        $.cookie("body-background-image", "none", {path: "/"});
+    }
+    $("body").css("background-image", "none")
+    
+    window.onload=function(){
+        // 长文章分页,只对电脑有效，放在这里是因为在article.js中有些问题, 产品/文章共用cl-artical-content，加个sidebar区分一下
+        if(!device.mobile() && !device.tablet() && $(".cl-artical-content").length && $("#sidebar").length)
+           initArticlePage();
+        else
+            $("#article-page").remove();
+    }
+    
+    </script>
+#end
+
+#define layoutIncludeHtmlHeader()
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="Expires" content="Sat, 31 Jan 2026 00:00:00 GMT" />
+<meta http-equiv="Cache-control" content="max-age=7200">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no,minimum-scale=1,maximum-scale=1">
+<title>#(article ? article.title : (product ? product.title : (WEB_TITLE ??)))</title>
+<meta name="keywords" content="#(SEO_KEYWORDS ??)">
+<meta name="description" content="#(SEO_DESCRIPTION ??)">
+<link id="theme-css" name="#option('whimurmur_theme', 'base')" href="" rel="stylesheet">
+<link rel="icon" href="#option('whimurmur_favicon')" type="image/x-icon">
+<link rel="shortcut icon" href="#option('whimurmur_favicon')" type="image/x-icon">
+#end
+
+#define layoutIncludeJsHeader()
+<script src="/static/components/jquery/jquery.min.js"></script>
+<script src="js/plugin/jquery/jquery.cookie.min.js"></script>
+<script src='js/common.js'></script>
+#end
+
+#define layoutIncludeJsBody()
+<script src="js/plugin/barrager/jquery.barrager.min.js"></script>
+<script src="js/plugin/device.min.js"></script>
+<script src="js/plugin/fontdetect.v0.3.js"></script>
+<script src='js/plugin/clipboard.min.js'></script>
+
+<script src="bootstrap/js/popper.min.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/components/highlight/highlight.pack.js"></script>
+<script src="/static/components/toastr/toastr.min.js"></script>
+#if(option('whimurmur_live2d'))
+<script src="js/plugin/live2d/autoload.js"></script>
+#end
+<script src="js/custom.js"></script>
+#end
+
+#define indexIncludeJs()
+<script src="js/index-custom.js"></script>
+<script src="js/plugin/zoomify/zoomify.min.js"></script>
+<script src="js/plugin/oneSentence/html2canvas.min.js"></script>
+#end
+
+#define articleReprintIncludeJs()
+<script src="/static/components/jquery/jquery.form.min.js"></script>
+<!--<script src="/static/commons/article.js"></script>-->
+<script src="js/plugin/jquery/jquery.qrcode.min.js"></script>
+<script src="js/plugin/oneSentence/html2canvas.min.js"></script>
+<script src="/static/components/ckeditor/ckeditor.js"></script>
+<script src="js/article-custom.js"></script>
+<script src="js/plugin/zoomify/zoomify.min.js"></script>
+<script src="js/plugin/jquery/jquery.tocify/jquery-ui.min.js"></script>
+<script src="js/plugin/jquery/jquery.tocify/jquery.tocify.js"></script>
+<script src="/static/commons/jpresscommons.js"></script>
+#end
+
+#define articleIncludeJs()
+<script src="/static/components/jquery/jquery.form.min.js"></script>
+<!--<script src="/static/commons/article.js"></script>-->
+<script src="js/plugin/jquery/jquery.qrcode.min.js"></script>
+<script src="js/plugin/oneSentence/html2canvas.min.js"></script>
+<script src="/static/components/ckeditor/ckeditor.js"></script>
+<script src="js/article-custom.js"></script>
+<script src="js/plugin/zoomify/zoomify.min.js"></script>
+<script src="js/plugin/jquery/jquery.tocify/jquery-ui.min.js"></script>
+<script src="js/plugin/jquery/jquery.tocify/jquery.tocify.js"></script>
+<script src="/static/commons/jpresscommons.js"></script>
+#end
+
+#define productIncludeJs()
+<script src="/static/components/jquery/jquery.form.min.js"></script>
+<script src="/static/components/swiper/swiper.min.js"></script>
+<script src="/static/commons/product.js"></script>
+<script src="js/plugin/jquery/jquery.qrcode.min.js"></script>
+<script src="js/product-custom.js"></script>
+<script src="js/plugin/zoomify/zoomify.min.js"></script>
+#end
+
+#define settingIncludeJs()
+<script src="#(T_PATH)/js/setting-custom.js" type='text/javascript'></script>
+#end
+
+#define layoutIncludeCssHeader()
+<!--bootstrap4-->
+ <link href="bootstrap/css/open-iconic-bootstrap.min.css" rel="stylesheet">
+<!--自定义css-->
+<link href="css/plugin/barrager/barrager.css" rel="stylesheet">
+<link href="css/whimurmur.css" rel="stylesheet">
+<link href="/static/components/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/static/components/highlight/styles/github.css">
+<link href="/static/components/toastr/toastr.min.css" rel="stylesheet">
+<link href="#(T_PATH)/css/layout.css" rel="stylesheet">
+#end
+
+#define layoutIncludeCssBody()
+<!-- 主题css预加载 -->
+<link rel="prefetch" href="#(TPATH)/bootstrap/css/theme/bootstrap.base.min.css">
+<link rel="prefetch" href="#(TPATH)/bootstrap/css/theme/bootstrap.blue_sky.min.css">
+<link rel="prefetch" href="#(TPATH)/bootstrap/css/theme/bootstrap.crisp.min.css">
+<link rel="prefetch" href="#(TPATH)/bootstrap/css/theme/bootstrap.dark_blue.min.css" as="css">
+<link rel="prefetch" href="#(TPATH)/bootstrap/css/theme/bootstrap.darkly.min.css" as="css">
+<link rel="prefetch" href="#(TPATH)/bootstrap/css/theme/bootstrap.grey.min.css" as="css">
+<link rel="prefetch" href="#(TPATH)/bootstrap/css/theme/bootstrap.light_shadow.min.css" as="css">
+<link rel="prefetch" href="#(TPATH)/bootstrap/css/theme/bootstrap.modern.min.css" as="css">
+<link rel="prefetch" href="#(TPATH)/bootstrap/css/theme/bootstrap.orange.min.css" as="css">
+<link rel="prefetch" href="#(TPATH)/bootstrap/css/theme/bootstrap.purple.min.css" as="css">
+<link rel="prefetch" href="#(TPATH)/bootstrap/css/theme/bootstrap.square.min.css" as="css">
+<link rel="prefetch" href="#(TPATH)/bootstrap/css/theme/bootstrap.warm.min.css" as="css">
+#end
+
+#define indexIncludeCss()
+<link href="#(T_PATH)/css/index.css" rel="stylesheet">
+#end
+
+#define articleReprintIncludeCss()
+<link href="/static/commons/article.css" rel="stylesheet">
+<link href="css/plugin/zoomify/zoomify.min.css" rel="stylesheet">
+<link href="css/plugin/tocify/jquery.tocify.css" rel="stylesheet">
+<link href="#(T_PATH)/css/article.css" rel="stylesheet">
+#end
+
+#define articleIncludeCss()
+<link href="/static/commons/article.css" rel="stylesheet">
+<link href="css/plugin/zoomify/zoomify.min.css" rel="stylesheet">
+<link href="css/plugin/tocify/jquery.tocify.css" rel="stylesheet">
+<link href="#(T_PATH)/css/article.css" rel="stylesheet">
+#end
+
+#define articleListIncludeCss()
+<link href="#(T_PATH)/css/article.css" rel="stylesheet">
+#end
+
+#define articleSearchIncludeCss()
+<link href="#(T_PATH)/css/article.css" rel="stylesheet">
+#end
+
+#define productIncludeCss()
+<link href="/static/commons/product.css" rel="stylesheet">
+<link href="/static/components/swiper/swiper.min.css" rel="stylesheet">
+<link href="css/plugin/zoomify/zoomify.min.css" rel="stylesheet">
+<link href="#(T_PATH)/css/product.css" rel="stylesheet">
+#end
+
+#define productListIncludeCss()
+<link href="#(T_PATH)/css/setting.css" rel="stylesheet">
+#end
+
+#define settingIncludeCss()
+<link href="#(T_PATH)/css/setting.css" rel="stylesheet">
+#end
