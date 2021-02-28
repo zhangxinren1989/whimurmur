@@ -1,6 +1,6 @@
 # whimurmur
 jpress template
-
+use with whimurmur-enhancement
 ##introduce：
 https://proprogrammar.com/article/whimurmurHelpMain
 ##update:
