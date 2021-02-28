@@ -1,5 +1,7 @@
 # whimurmur
 jpress template
-introduce：
-https://www.qingyu.blue/article/whimurmurHelpMain
-https://www.qingyu.blue/article/category/templateWhimurmur
+
+##introduce：
+https://proprogrammar.com/article/whimurmurHelpMain
+##update:
+https://proprogrammar.com/article/category/whimurmurUpdated
